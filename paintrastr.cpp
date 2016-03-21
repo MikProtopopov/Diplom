@@ -73,19 +73,5 @@ void PaintRastr::setRastr(int **&localRastr)
 
 void PaintRastr::drawRastr()
 {
-//    QPainter main(this);
-//    QRect rect = QRect(0,0,cellHeight,cellWidth); // Draw rectangle
-//    main.fillRect(rect,QColor(0,0,0,255)); // Fill rectangle
 
-//    for (int i=0; i < elemCount; i++)
-//        for (int j=0; j < elemCount; j++)
-//        {
-//            if (rastr3[i][j] == 1)
-//            {
-//                QRect rect = QRect(ProcessX(i,elemCount),ProcessY(j,elemCount),cellSize,
-//                               cellSize); // Draw rectangle
-//                main.fillRect(rect,QColor(0,0,0,255)); // Fill rectangle
-
-//            }
-//        }
 }
