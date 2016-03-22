@@ -18,16 +18,16 @@ SOURCES += main.cpp\
     startwindow.cpp \
     rastrmanipulation.cpp \
     paintrastr.cpp \
-    diplom.cpp
+    mainwindow.cpp
 
 HEADERS  += \
     dialog.h \
     startwindow.h \
     rastrmanipulation.h \
     paintrastr.h \
-    diplom.h
+    mainwindow.h
 
 FORMS    += \
     dialog.ui \
     startwindow.ui \
-    diplom.ui
+    mainwindow.ui
