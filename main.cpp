@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "diplom.h"
+#include "mainwindow.h"
 #include "startwindow.h"
 #include "rastrmanipulation.h"
 #include <QApplication>
@@ -23,13 +23,13 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    Diplom diplom;
+    MainWindow mainwindow;
     StartWindow sWindow;
 
     QObject::connect(&sWindow, SIGNAL(newParametersSet(int xInt, int yInt)),
-                     &diplom, SLOT(acceptParameters(int xInt, int yInt)));
+                     &mainwindow, SLOT(acceptParameters(int xInt, int yInt)));
 
-    diplom.show();
+    mainwindow.show();
 
     return a.exec();
 }

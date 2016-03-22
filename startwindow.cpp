@@ -15,7 +15,7 @@
 
 #include "startwindow.h"
 #include "ui_startwindow.h"
-#include "diplom.h"
+#include "mainwindow.h"
 #include "rastrmanipulation.h"
 
 StartWindow::StartWindow(QWidget *parent) :
