@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "MainWindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dialog.h"
 #include "startwindow.h"
@@ -37,9 +37,7 @@
 
 using namespace std;
 //
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     dialog = new Dialog(this);
@@ -104,6 +102,7 @@ void MainWindow::on_actionNew_clicked()
         rastrManipulation.deleteArray(rastrManipulation.iRastr);
     sWindow->show();
     sWindow->activateWindow();
+    ui->pushButtonLeft->setEnabled(1);
 }
 
 void MainWindow::on_actionImport_clicked()
@@ -112,12 +111,17 @@ void MainWindow::on_actionImport_clicked()
                                                     "", tr("Текстовый файл (*.txt);"));
     errorHandling(rastrManipulation.importRastr(fileName));
 
-    paintRastr1->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),rastrManipulation.jRastr);
-    paintRastr2->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),rastrManipulation.jRastr);
+    paintRastr1->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
+                               rastrManipulation.iRastr, rastrManipulation.jRastr,0);
+    paintRastr2->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
+                               rastrManipulation.iRastr, rastrManipulation.jRastr,0);
 
     rastrManipulation.fillRastr2();
     paintRastr1->setRastrBg(rastrManipulation.rastr1);
     paintRastr2->setRastrMov(rastrManipulation.rastr2);
+
+    ui->pushButtonLeft->setEnabled(1);
+    ui->pushButtonStep->setEnabled(1);
 }
 
 void MainWindow::on_actionExport_clicked()
@@ -125,4 +129,11 @@ void MainWindow::on_actionExport_clicked()
     QString fileName = QFileDialog::getSaveFileName(this, tr("Экспортировать"),
                                                     "", tr("Текстовый файл (*.txt);;Все файлы(*)"));
     errorHandling(rastrManipulation.exportRastr(fileName));
+}
+
+void MainWindow::on_pushButtonStep_clicked()
+{
+    if (paintRastr2->stepMov < rastrManipulation.jRastr * 2)
+    paintRastr2->stepMov += 1;
+    paintRastr2->update();
 }

@@ -45,6 +45,8 @@ private slots:
     void on_actionImport_clicked();
     void on_actionNew_clicked();
 
+    void on_pushButtonStep_clicked();
+
 private:
     Ui::MainWindow *ui;
     Dialog *dialog;

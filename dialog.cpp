@@ -21,9 +21,19 @@ Dialog::Dialog(QWidget *parent) :
     ui(new Ui::Dialog)
 {
     ui->setupUi(this);
+    ui->lineEdit->setText("0");
+    startStep = -1;
+    connect(ui->pushButton,SIGNAL(clicked()),this,SLOT(close()));
 }
 
 Dialog::~Dialog()
 {
     delete ui;
+}
+
+void Dialog::on_pushButton_clicked()
+{
+    oscillation = ui->comboBox_2->currentIndex();
+    mode = ui->comboBox->currentIndex();
+    startStep = ui->lineEdit->text().toInt();
 }

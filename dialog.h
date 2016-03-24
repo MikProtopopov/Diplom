@@ -29,6 +29,12 @@ class Dialog : public QDialog
 public:
     explicit Dialog(QWidget *parent = 0);
     ~Dialog();
+    bool oscillation;
+    bool mode;
+    int startStep;
+
+private slots:
+    void on_pushButton_clicked();
 
 private:
     Ui::Dialog *ui;
