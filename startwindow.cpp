@@ -32,8 +32,6 @@ StartWindow::~StartWindow()
 
 void StartWindow::on_pushButton_clicked()
 {
-    //int iStart = ui->lineEditX->text().toInt();
-    //int jStart = ui->lineEditY->text().toInt();
     int iStart = 3;
     int jStart = 3;
 

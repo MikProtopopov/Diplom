@@ -23,12 +23,13 @@ class PaintRastr : public QWidget
     Q_OBJECT
 public:
     explicit PaintRastr(QWidget *parent = 0);
-    void drawRastr();
     void setParameters(int height, int width, int count);
     int ProcessX(int i, int iRastr);
     int ProcessY(int j, int jRastr);
-    void setRastr(int **&localRastr);
-    int **rastr3;
+    void setRastrBg(int **&localRastr);
+    void setRastrMov(int **&localRastr);
+    int **rastrBg;
+    int **rastrMov;
 
 
 protected:
