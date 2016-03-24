@@ -53,6 +53,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="pushButtonLeft">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -94,7 +97,7 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>140</x>
+      <x>195</x>
       <y>290</y>
       <width>71</width>
       <height>20</height>
@@ -107,7 +110,7 @@
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>215</x>
+      <x>270</x>
       <y>290</y>
       <width>21</width>
       <height>20</height>
@@ -138,6 +141,22 @@
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2"/>
+   </widget>
+   <widget class="QPushButton" name="pushButtonStep">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>290</y>
+      <width>51</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&gt;&gt;</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

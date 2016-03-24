@@ -32,8 +32,5 @@ StartWindow::~StartWindow()
 
 void StartWindow::on_pushButton_clicked()
 {
-    int iStart = 3;
-    int jStart = 3;
 
-    emit newParametersSet(iStart,jStart);
 }

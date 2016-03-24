@@ -22,10 +22,11 @@ PaintRastr::PaintRastr(QWidget *parent) : QWidget(parent)
 {
     rastrBg = NULL;
     rastrMov = NULL;
+    stepMov = 0;
 }
 
 // Set parameters for calculations
-void PaintRastr::setParameters(int height, int width, int count)
+void PaintRastr::setParameters(int height, int width, int axisX, int axisY, int step)
 {
     RastrManipulation rastrManipulation;
     windowHeight = height; // Height of the paint area
@@ -33,17 +34,19 @@ void PaintRastr::setParameters(int height, int width, int count)
     indentSpace = 10; // Border margin
     rastrHeight = windowHeight - 2*indentSpace; // Height of the drawn rastr
     rastrWidth = windowWidth / 3 - 2*indentSpace; // Width of the drawn rastr
-    elemCount = count; // Rastr's dimentions
-    cellHeight = rastrHeight / elemCount; // Height of one cell of rastr
-    cellWidth = rastrWidth / elemCount; // Width of one cell of rastr
+    elemCountX = axisX; // Rastr's dimentions on X axis
+    elemCountY = axisY; // Rastr's dimentions on Y axis
+    cellHeight = rastrHeight / elemCountY; // Height of one cell of rastr
+    cellWidth = rastrWidth / elemCountX; // Width of one cell of rastr
     rastrBg = NULL; // Empty background rastr
     rastrMov = NULL; // Empty moving rastr
+    stepMov = step;
 }
 
 // Procces coordinate on X axis
-int PaintRastr::ProcessX(int i, int iRastr)
+int PaintRastr::ProcessX(int i, int iRastr, int step)
 {
-   return indentSpace + i*(rastrHeight/iRastr);
+   return indentSpace + i*(rastrHeight/iRastr) + step*(cellWidth + 2);
 }
 
 // Procces coordinate on Y axis
@@ -60,33 +63,33 @@ void PaintRastr::paintEvent(QPaintEvent *)
 
     if (NULL != rastrBg)
     {
-        main.drawRect(ProcessX(0,0) - indentSpace,ProcessY(0,0),rastrHeight,rastrWidth);
-        for (int i=0; i < elemCount; i++)
-            for (int j=0; j < elemCount; j++)
+        main.drawRect(ProcessX(0,0,0) - indentSpace,ProcessY(0,0),rastrHeight,rastrWidth);
+        for (int i=0; i < elemCountY; i++)
+            for (int j=0; j < elemCountX; j++)
             {
                 if (0 == rastrBg[j][i])
                 {
-                    QRect rect = QRect(ProcessX(i,elemCount) - indentSpace,ProcessY(j,elemCount),cellHeight,
+                    QRect rect = QRect(ProcessX(i,elemCountX,0) - indentSpace,ProcessY(j,elemCountY),cellHeight,
                                    cellWidth); // Draw rectangle
                     main.fillRect(rect,QColor(150,150,150,255)); // Fill rectangle
                 }
             }
-        main.drawRect(ProcessX(0,0) - indentSpace,ProcessY(0,0),rastrHeight,rastrWidth);
+        main.drawRect(ProcessX(0,0,0) - indentSpace,ProcessY(0,0),rastrHeight,rastrWidth);
     }
     else
         if (NULL != rastrMov)
         {
-            for (int i=0; i < elemCount; i++)
-                for (int j=0; j < elemCount; j++)
+            for (int i=0; i < elemCountY; i++)
+                for (int j=0; j < elemCountX; j++)
                 {
                     if (0 == rastrMov[j][i])
                     {
-                        QRect rect = QRect(ProcessX(i,elemCount),ProcessY(j,elemCount),cellHeight,
+                        QRect rect = QRect(ProcessX(i,elemCountX,stepMov),ProcessY(j,elemCountY),cellHeight,
                                        cellWidth); // Draw rectangle
                         main.fillRect(rect,QColor(0,0,0,255)); // Fill rectangle
                     }
                 }
-            main.drawRect(ProcessX(0,0),ProcessY(0,0),rastrHeight,rastrWidth);
+            main.drawRect(ProcessX(0,0,stepMov),ProcessY(0,0),rastrHeight,rastrWidth);
         }
     else
         return;

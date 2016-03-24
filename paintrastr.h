@@ -23,13 +23,14 @@ class PaintRastr : public QWidget
     Q_OBJECT
 public:
     explicit PaintRastr(QWidget *parent = 0);
-    void setParameters(int height, int width, int count);
-    int ProcessX(int i, int iRastr);
+    void setParameters(int height, int width, int axisX, int axisY, int step);
+    int ProcessX(int i, int iRastr, int step);
     int ProcessY(int j, int jRastr);
     void setRastrBg(int **&localRastr);
     void setRastrMov(int **&localRastr);
     int **rastrBg;
     int **rastrMov;
+    int stepMov; // Step of movement
 
 
 protected:
@@ -41,9 +42,11 @@ private:
     int rastrHeight; // Height of rastr
     int rastrWidth; // Width of rastr
     int indentSpace; // Space between the border of the canvas and the rastr
-    int elemCount; // Amount of elements on one side of rastr
+    int elemCountX; // Amount of elements on one side of rastr
+    int elemCountY; // Amount of elements on one side of rastr
     int cellHeight; // Height of one cell in rastr
-    int cellWidth; // Width of
+    int cellWidth; // Width of one cell
+
 
 signals:
 
