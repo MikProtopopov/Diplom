@@ -32,17 +32,11 @@ RastrManipulation::RastrManipulation()
 {
     rastr1 = NULL;
     rastr2 = NULL;
-    oscillation = 1;
+    oscillation = 0; // crashes with 1
 }
 
 int RastrManipulation::checkForSave()
 {
-    // TO DO
-    // call window asking if user wants to save the existing array
-    // save or export?
-    // if YES - do it - return 1
-    // if NO - carry on - return 0
-
     return 0;
 }
 
@@ -61,8 +55,7 @@ void RastrManipulation::createNewRastr(const int &xInt, const int &yInt)
 }
 
 // Delete existing array
-void RastrManipulation::deleteArray(int DeleteLines)
-// DeleteLines - number of lines in array we are deleting
+void RastrManipulation::deleteArray(int DeleteLines) // DeleteLines - number of lines in array we are deleting
 {
     for (int i=0; i<DeleteLines; i++)
         delete[] rastr1[i];
@@ -87,10 +80,6 @@ int RastrManipulation::importRastr(QString fileName)
     QString readBufferString; // Read-string from file
     QStringList readBufferInt; // String list for "conversion" to integer
     QTextStream inTextStream(&inFile); // Read stream of text
-
-//    #ifndef QT_NO_CURSOR
-//        QApplication::setOverrideCursor(Qt::WaitCursor);
-//    #endif
 
     int jRastrPrev = -1; //Number of elements in previous line
     iRastr = 0;
@@ -153,9 +142,6 @@ int RastrManipulation::importRastr(QString fileName)
     }
 
     inFile.close();
-//    #ifndef QT_NO_CURSOR
-//        QApplication::restoreOverrideCursor();
-//    #endif
     return 0;
 }
 
@@ -193,12 +179,12 @@ void RastrManipulation::fillRastr2()
 }
 
 
-// Вычисление открытых окон в пересечении растров
+// Calculate the number of open windows
 int RastrManipulation::compareRastr(int stepHorisontal, int stepVertical)
 {
     int countWindow = 0;
-    int columns = iRastr - abs(stepHorisontal - iRastr); // Количество столбцов
-    int rows = jRastr - abs(stepVertical - jRastr); // Количество строк
+    int columns = iRastr - abs(stepHorisontal - iRastr); // Number of columns
+    int rows = jRastr - abs(stepVertical - jRastr); // Number of rows
 
     if (0 == oscillation)
         for (int i=0; i<iRastr; i++)

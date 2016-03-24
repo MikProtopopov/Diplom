@@ -45,21 +45,22 @@ MainWindow::MainWindow(QWidget *parent) :
     dialog = new Dialog(this);
     sWindow = new StartWindow(this);
     paintRastr1 = new PaintRastr(this);
+    paintRastr2 = new PaintRastr(this);
 
     ui->verticalLayout->addWidget(paintRastr1);
+    ui->verticalLayout_2->addWidget(paintRastr2);
 
     connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(on_actionExport_clicked()));
     connect(ui->actionImport, SIGNAL(triggered()), this, SLOT(on_actionImport_clicked()));
-    connect(ui->actionNew_2, SIGNAL(triggered()), this, SLOT(on_actionNew_clicked()));
+    connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(on_actionNew_clicked()));
 }
 
 MainWindow::~MainWindow()
 {
     paintRastr1->deleteLater();
+    paintRastr2->deleteLater();
     delete ui;
 }
-
-
 
 // Error Processing Facility
 void MainWindow::errorHandling(int errorCode)
@@ -112,14 +113,11 @@ void MainWindow::on_actionImport_clicked()
     errorHandling(rastrManipulation.importRastr(fileName));
 
     paintRastr1->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),rastrManipulation.jRastr);
-//    rastrManipulation.fillRastr2();
-    paintRastr1->setRastr(rastrManipulation.rastr1);
-//    for (int i=0; i<rastrManipulation.jRastr*2+1; i++)
-//    {
-//        ui->tableWidget->insertRow(i);
-//        QString rastrAnswer = QString::number(rastrManipulation.compareRastr(i,1));
-//        ui->tableWidget->setItem(0,i,new QTableWidgetItem(rastrAnswer));
-//    }
+    paintRastr2->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),rastrManipulation.jRastr);
+
+    rastrManipulation.fillRastr2();
+    paintRastr1->setRastrBg(rastrManipulation.rastr1);
+    paintRastr2->setRastrMov(rastrManipulation.rastr2);
 }
 
 void MainWindow::on_actionExport_clicked()
