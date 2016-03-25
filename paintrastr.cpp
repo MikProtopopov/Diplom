@@ -46,7 +46,7 @@ void PaintRastr::setParameters(int height, int width, int axisX, int axisY, int 
 // Procces coordinate on X axis
 int PaintRastr::ProcessX(int i, int iRastr, int step)
 {
-   return indentSpace + i*(rastrHeight/iRastr) + step*(cellWidth + 2);
+   return indentSpace + i*(rastrHeight/iRastr) + step*cellHeight;
 }
 
 // Procces coordinate on Y axis

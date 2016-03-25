@@ -22,6 +22,7 @@
 #include "startwindow.h"
 #include "rastrmanipulation.h"
 #include "paintrastr.h"
+#include "paintgraph.h"
 
 namespace Ui {
 class MainWindow;
@@ -38,6 +39,7 @@ public:
     RastrManipulation rastrManipulation;
     PaintRastr *paintRastr1;
     PaintRastr *paintRastr2;
+    PaintGraph *paintGraph1;
 
 private slots:
     void on_pushButtonLeft_clicked();
