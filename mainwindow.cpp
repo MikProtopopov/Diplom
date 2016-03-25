@@ -44,9 +44,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),ui(new Ui::MainWin
     sWindow = new StartWindow(this);
     paintRastr1 = new PaintRastr(this);
     paintRastr2 = new PaintRastr(this);
+    paintGraph1 = new PaintGraph(this);
 
     ui->verticalLayout->addWidget(paintRastr1);
     ui->verticalLayout_2->addWidget(paintRastr2);
+    ui->verticalLayout_3->addWidget(paintGraph1);
 
     connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(on_actionExport_clicked()));
     connect(ui->actionImport, SIGNAL(triggered()), this, SLOT(on_actionImport_clicked()));
@@ -57,6 +59,7 @@ MainWindow::~MainWindow()
 {
     paintRastr1->deleteLater();
     paintRastr2->deleteLater();
+    paintGraph1->deleteLater();
     delete ui;
 }
 
@@ -115,6 +118,8 @@ void MainWindow::on_actionImport_clicked()
                                rastrManipulation.iRastr, rastrManipulation.jRastr,0);
     paintRastr2->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
                                rastrManipulation.iRastr, rastrManipulation.jRastr,0);
+    paintGraph1->setParameters(ui->graphicsView_2->height(), ui->graphicsView_2->width(), 0,
+                               rastrManipulation.iRastr,rastrManipulation.jRastr);
 
     rastrManipulation.fillRastr2();
     paintRastr1->setRastrBg(rastrManipulation.rastr1);
@@ -136,4 +141,8 @@ void MainWindow::on_pushButtonStep_clicked()
     if (paintRastr2->stepMov < rastrManipulation.jRastr * 2)
     paintRastr2->stepMov += 1;
     paintRastr2->update();
+
+    paintGraph1->stepMov +=1;
+    paintGraph1->windowCount = rastrManipulation.compareRastr(paintGraph1->stepMov, 0);
+    paintGraph1->update();
 }
