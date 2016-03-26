@@ -23,6 +23,7 @@
 #include "rastrmanipulation.h"
 #include "paintrastr.h"
 #include "paintgraph.h"
+#include "qcustomplot.h"
 
 namespace Ui {
 class MainWindow;
@@ -36,6 +37,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void errorHandling(int);
+    void drawGraph(QCustomPlot *customPlot);
     RastrManipulation rastrManipulation;
     PaintRastr *paintRastr1;
     PaintRastr *paintRastr2;
