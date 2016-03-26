@@ -19,6 +19,7 @@
 #include "startwindow.h"
 #include "rastrmanipulation.h"
 #include "paintrastr.h"
+#include "qcustomplot.h"
 
 #include <malloc.h>
 #include <fstream>
@@ -53,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),ui(new Ui::MainWin
     connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(on_actionExport_clicked()));
     connect(ui->actionImport, SIGNAL(triggered()), this, SLOT(on_actionImport_clicked()));
     connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(on_actionNew_clicked()));
+    drawGraph(ui->customPlot1);
 }
 
 MainWindow::~MainWindow()
@@ -61,6 +63,31 @@ MainWindow::~MainWindow()
     paintRastr2->deleteLater();
     paintGraph1->deleteLater();
     delete ui;
+}
+
+void MainWindow::drawGraph(QCustomPlot *customPlot)
+{
+    if (NULL == rastrManipulation.rastr1)
+        return;
+
+    QVector<double> x(101), y(101); // initialize with entries 0..100
+      for (int i=0; i<paintRastr2->stepMov; i++)
+      {
+        x[i] = i; // x goes from -1 to 1
+        y[i] = rastrManipulation.compareRastr(i,0);  // let's plot a quadratic function
+      }
+    // create graph and assign data to it:
+    customPlot->addGraph();
+    customPlot->graph(0)->setData(x,y);
+    //paintRastr2->stepMov, rastrManipulation.compareRastr(0,0)
+    // give the axes some labels:
+    customPlot->xAxis->setLabel("");
+    customPlot->yAxis->setLabel("");
+    // set axes ranges, so we see all data:
+    customPlot->xAxis->setRange(0, rastrManipulation.iRastr*2);
+    customPlot->yAxis->setRange(0, 15);
+
+    customPlot->replot();
 }
 
 // Error Processing Facility
@@ -145,4 +172,6 @@ void MainWindow::on_pushButtonStep_clicked()
     paintGraph1->stepMov +=1;
     paintGraph1->windowCount = rastrManipulation.compareRastr(paintGraph1->stepMov, 0);
     paintGraph1->update();
+
+    drawGraph(ui->customPlot1);
 }

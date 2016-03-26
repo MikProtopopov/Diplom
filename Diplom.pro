@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 TARGET = Diplom
 TEMPLATE = app
@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     rastrmanipulation.cpp \
     paintrastr.cpp \
     mainwindow.cpp \
-    paintgraph.cpp
+    paintgraph.cpp \
+    qcustomplot.cpp
 
 HEADERS  += \
     dialog.h \
@@ -27,7 +28,8 @@ HEADERS  += \
     rastrmanipulation.h \
     paintrastr.h \
     mainwindow.h \
-    paintgraph.h
+    paintgraph.h \
+    qcustomplot.h
 
 FORMS    += \
     dialog.ui \
