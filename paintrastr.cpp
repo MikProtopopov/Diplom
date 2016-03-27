@@ -20,13 +20,12 @@
 // Constructor
 PaintRastr::PaintRastr(QWidget *parent) : QWidget(parent)
 {
-    rastrBg = NULL;
-    rastrMov = NULL;
+    rastr = NULL;
     stepMov = 0;
 }
 
 // Set parameters for calculations
-void PaintRastr::setParameters(int height, int width, int axisX, int axisY, int step)
+void PaintRastr::setParameters(int height, int width, int axisX, int axisY, int step, QColor color)
 {
     RastrManipulation rastrManipulation;
     windowHeight = height; // Height of the paint area
@@ -38,72 +37,49 @@ void PaintRastr::setParameters(int height, int width, int axisX, int axisY, int 
     elemCountY = axisY; // Rastr's dimentions on Y axis
     cellHeight = rastrHeight / elemCountY; // Height of one cell of rastr
     cellWidth = rastrWidth / elemCountX; // Width of one cell of rastr
-    rastrBg = NULL; // Empty background rastr
-    rastrMov = NULL; // Empty moving rastr
+    rastr = NULL; // Empty moving rastr
     stepMov = step;
+    rastrColor = color;
+
 }
 
 // Procces coordinate on X axis
-int PaintRastr::ProcessX(int i, int iRastr, int step)
+int PaintRastr::ProcessX(int i, int step)
 {
-   return indentSpace + i*(rastrHeight/iRastr) + step*cellHeight;
+   return indentSpace + (i + step)*cellHeight;
 }
 
 // Procces coordinate on Y axis
 int PaintRastr::ProcessY(int j, int jRastr)
 {
-   return indentSpace + j*(rastrWidth/jRastr);
+   return indentSpace + j*cellWidth;
 }
 
 // Drawing
 void PaintRastr::paintEvent(QPaintEvent *)
 {
     QPainter main(this);
-    main.setPen(QPen(Qt::black,2,Qt::SolidLine));
-
-    if (NULL != rastrBg)
+    main.setPen(QPen(rastrColor,2,Qt::SolidLine));
+    if (NULL != rastr)
     {
-        main.drawRect(ProcessX(0,0,0) - indentSpace,ProcessY(0,0),rastrHeight,rastrWidth);
         for (int i=0; i < elemCountY; i++)
             for (int j=0; j < elemCountX; j++)
             {
-                if (0 == rastrBg[j][i])
+                if (0 == rastr[j][i])
                 {
-                    QRect rect = QRect(ProcessX(i,elemCountX,0) - indentSpace,ProcessY(j,elemCountY),cellHeight,
+                    QRect rect = QRect(ProcessX(i,stepMov),ProcessY(j,elemCountY),cellHeight,
                                    cellWidth); // Draw rectangle
-                    main.fillRect(rect,QColor(150,150,150,255)); // Fill rectangle
+                    main.fillRect(rect,QColor(rastrColor)); // Fill rectangle
                 }
             }
-        main.drawRect(ProcessX(0,0,0) - indentSpace,ProcessY(0,0),rastrHeight,rastrWidth);
+        main.drawRect(ProcessX(0,stepMov),ProcessY(0,0),rastrHeight,rastrWidth);
     }
-    else
-        if (NULL != rastrMov)
-        {
-            for (int i=0; i < elemCountY; i++)
-                for (int j=0; j < elemCountX; j++)
-                {
-                    if (0 == rastrMov[j][i])
-                    {
-                        QRect rect = QRect(ProcessX(i,elemCountX,stepMov),ProcessY(j,elemCountY),cellHeight,
-                                       cellWidth); // Draw rectangle
-                        main.fillRect(rect,QColor(0,0,0,255)); // Fill rectangle
-                    }
-                }
-            main.drawRect(ProcessX(0,0,stepMov),ProcessY(0,0),rastrHeight,rastrWidth);
-        }
-    else
-        return;
-}
-
-// Set rastr for background (not moving)
-void PaintRastr::setRastrBg(int **&localRastr)
-{
-    rastrBg = localRastr;
+    else return;
 }
 
 // Set moving rastr
-void PaintRastr::setRastrMov(int **&localRastr)
+void PaintRastr::setRastr(int **&localRastr)
 {
-    rastrMov = localRastr;
+    rastr = localRastr;
 }
 
