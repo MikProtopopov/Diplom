@@ -42,6 +42,8 @@ public:
     PaintRastr *paintRastr1;
     PaintRastr *paintRastr2;
     PaintGraph *paintGraph1;
+    QVector<double> graphX;
+    QVector<double> graphY;
 
 private slots:
     void on_pushButtonLeft_clicked();

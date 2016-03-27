@@ -38,7 +38,7 @@
 
 using namespace std;
 //
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),ui(new Ui::MainWindow),graphX(100),graphY(100)
 {
     ui->setupUi(this);
     dialog = new Dialog(this);
@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),ui(new Ui::MainWin
     connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(on_actionExport_clicked()));
     connect(ui->actionImport, SIGNAL(triggered()), this, SLOT(on_actionImport_clicked()));
     connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(on_actionNew_clicked()));
-    drawGraph(ui->customPlot1);
+
 }
 
 MainWindow::~MainWindow()
@@ -67,26 +67,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::drawGraph(QCustomPlot *customPlot)
 {
+
     if (NULL == rastrManipulation.rastr1)
         return;
 
-    QVector<double> x(101), y(101); // initialize with entries 0..100
-      for (int i=0; i<paintRastr2->stepMov; i++)
-      {
-        x[i] = i; // x goes from -1 to 1
-        y[i] = rastrManipulation.compareRastr(i,0);  // let's plot a quadratic function
-      }
+    graphX[paintRastr2->stepMov] = paintRastr2->stepMov;
+    graphY[paintRastr2->stepMov] = rastrManipulation.compareRastr(paintRastr2->stepMov,0);
+
     // create graph and assign data to it:
     customPlot->addGraph();
-    customPlot->graph(0)->setData(x,y);
+    customPlot->graph(0)->setData(graphX,graphY);
     //paintRastr2->stepMov, rastrManipulation.compareRastr(0,0)
-    // give the axes some labels:
-    customPlot->xAxis->setLabel("");
-    customPlot->yAxis->setLabel("");
-    // set axes ranges, so we see all data:
-    customPlot->xAxis->setRange(0, rastrManipulation.iRastr*2);
-    customPlot->yAxis->setRange(0, 15);
-
     customPlot->replot();
 }
 
@@ -154,6 +145,14 @@ void MainWindow::on_actionImport_clicked()
 
     ui->pushButtonLeft->setEnabled(1);
     ui->pushButtonStep->setEnabled(1);
+
+    // give the axes some labels:
+    ui->customPlot1->xAxis->setLabel("");
+    ui->customPlot1->yAxis->setLabel("");
+    // set axes ranges, so we see all data:
+    ui->customPlot1->xAxis->setRange(0, rastrManipulation.iRastr*2);
+    ui->customPlot1->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,0) + 2);
+
 }
 
 void MainWindow::on_actionExport_clicked()
