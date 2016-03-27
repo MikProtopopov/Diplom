@@ -24,8 +24,8 @@ class PaintRastr : public QWidget
 public:
     explicit PaintRastr(QWidget *parent = 0);
     void setParameters(int height, int width, int axisX, int axisY, int step, QColor color);
-    int ProcessX(int i, int step);
-    int ProcessY(int j, int jRastr);
+    int ProcessX(int i);
+    int ProcessY(int j);
     void setRastr(int **&localRastr);
     int **rastr;
     int stepMov; // Step of movement

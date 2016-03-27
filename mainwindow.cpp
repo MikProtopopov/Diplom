@@ -130,7 +130,7 @@ void MainWindow::on_actionImport_clicked()
     errorHandling(rastrManipulation.importRastr(fileName));
 
     paintRastr1->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
-                               rastrManipulation.iRastr, rastrManipulation.jRastr,0, Qt::gray);
+                               rastrManipulation.iRastr, rastrManipulation.jRastr,rastrManipulation.iRastr, Qt::gray);
     paintRastr2->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
                                rastrManipulation.iRastr, rastrManipulation.jRastr,0, Qt::black);
 
