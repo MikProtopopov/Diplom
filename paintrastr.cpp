@@ -44,13 +44,13 @@ void PaintRastr::setParameters(int height, int width, int axisX, int axisY, int 
 }
 
 // Procces coordinate on X axis
-int PaintRastr::ProcessX(int i, int step)
+int PaintRastr::ProcessX(int i)
 {
-   return indentSpace + (i + step)*cellHeight;
+   return indentSpace + i*cellHeight;
 }
 
 // Procces coordinate on Y axis
-int PaintRastr::ProcessY(int j, int jRastr)
+int PaintRastr::ProcessY(int j)
 {
    return indentSpace + j*cellWidth;
 }
@@ -60,21 +60,19 @@ void PaintRastr::paintEvent(QPaintEvent *)
 {
     QPainter main(this);
     main.setPen(QPen(rastrColor,2,Qt::SolidLine));
-    if (NULL != rastr)
-    {
-        for (int i=0; i < elemCountY; i++)
-            for (int j=0; j < elemCountX; j++)
+    if (NULL == rastr)
+        return;
+    for (int i=0; i < elemCountY; i++)
+        for (int j=0; j < elemCountX; j++)
+        {
+            if (0 == rastr[j][i])
             {
-                if (0 == rastr[j][i])
-                {
-                    QRect rect = QRect(ProcessX(i,stepMov),ProcessY(j,elemCountY),cellHeight,
-                                   cellWidth); // Draw rectangle
-                    main.fillRect(rect,QColor(rastrColor)); // Fill rectangle
-                }
+                QRect rect = QRect(ProcessX(i + stepMov),ProcessY(j),cellHeight,
+                               cellWidth); // Draw rectangle
+                main.fillRect(rect,QColor(rastrColor)); // Fill rectangle
             }
-        main.drawRect(ProcessX(0,stepMov),ProcessY(0,0),rastrHeight,rastrWidth);
-    }
-    else return;
+        }
+    main.drawRect(ProcessX(stepMov),ProcessY(0),rastrHeight,rastrWidth);
 }
 
 // Set moving rastr
