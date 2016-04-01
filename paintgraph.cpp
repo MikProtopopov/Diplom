@@ -52,7 +52,7 @@ int PaintGraph::processCount(int count)
     return drawAreaHeight - indentSpace - count*(drawAreaHeight / elemCountX / elemCountY * 2);
 }
 
-int PaintGraph::processStep(int step)
+int PaintGraph::processStep()
 {
     return indentSpace + stepMov*(drawAreaWidth / elemCountY / 2);
 }
@@ -63,10 +63,10 @@ void PaintGraph::paintEvent(QPaintEvent *)
     {
         QPainter main(this);
         main.setPen(QPen(Qt::black,2,Qt::SolidLine));
-        main.drawLine(prevPointY, prevPointX, processStep(stepMov), processCount(windowCount));
+        main.drawLine(prevPointY, prevPointX, processStep(), processCount(windowCount));
 
         prevPointX = processCount(windowCount);
-        prevPointY = processStep(stepMov);
+        prevPointY = processStep();
     }
 }
 

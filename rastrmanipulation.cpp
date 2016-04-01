@@ -37,6 +37,11 @@ RastrManipulation::RastrManipulation()
 
 int RastrManipulation::checkForSave()
 {
+    // TO DO
+    // call window asking if user wants to save the existing array
+    // save or export?
+    // if YES - do it - return 1
+    // if NO - carry on - return 0
     return 0;
 }
 
@@ -58,8 +63,12 @@ void RastrManipulation::createNewRastr(const int &xInt, const int &yInt)
 void RastrManipulation::deleteArray(int DeleteLines) // DeleteLines - number of lines in array we are deleting
 {
     for (int i=0; i<DeleteLines; i++)
+    {
         delete[] rastr1[i];
+        delete[] rastr2[i];
+    }
     delete[] rastr1;
+    delete[] rastr2;
 }
 
 // Import matrix from file
@@ -149,7 +158,7 @@ int RastrManipulation::importRastr(QString fileName)
 int RastrManipulation::exportRastr(QString fileName)
 {
     if (fileName.isEmpty())
-        return 6;
+        return 1;
     else
     {
         QFile file(fileName); //File for export
@@ -166,16 +175,21 @@ int RastrManipulation::exportRastr(QString fileName)
     return 0;
 }
 
-void RastrManipulation::fillRastr2()
+int RastrManipulation::fillRastr2()
 {
         if (0 == oscillation)
             rastr2 = rastr1;
         if (1 == oscillation)
         {
+            try {
             rastr2 = new int*[iRastr - 1];
             for (int i=0; i<iRastr - 1; i++)
                 rastr2[i] = rastr1[i+1];
+            } catch (...) {
+                return 7;
+            }
         }
+        return 0;
 }
 
 

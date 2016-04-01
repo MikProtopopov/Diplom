@@ -37,21 +37,23 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void errorHandling(int);
-    void drawGraph(QCustomPlot *customPlot);
-    RastrManipulation rastrManipulation;
-    PaintRastr *paintRastr1;
-    PaintRastr *paintRastr2;
-    PaintGraph *paintGraph1;
-    QVector<double> graphX;
-    QVector<double> graphY;
+    int drawGraph(QCustomPlot *customPlot);
+    RastrManipulation rastrManipulation; // Exemplar of RastrManipulation class
+    PaintRastr *paintRastr1; // Exemplar of PaintRastr class for moving rastr
+    PaintRastr *paintRastr2; // Exemplar of PaintRastr class for not moving rastr
+
+    QVector<double> graphX; // Vector for drawing of graph, for X axis
+    QVector<double> graphY; // Vector for drawing of graph, for Y axis
 
 private slots:
-    void on_pushButtonLeft_clicked();
-    void on_actionExport_clicked();
-    void on_actionImport_clicked();
-    void on_actionNew_clicked();
+    void on_pushButtonStart_clicked(); // Action trigger for starting rastr movement
+    void on_actionExport_clicked(); // Action trigger for export
+    void on_actionImport_clicked(); // Action trigger for import
+    void on_actionNew_clicked(); // Action trigger for creating new rastr
 
-    void on_pushButtonStep_clicked();
+    void on_pushButtonStep_clicked(); // Action trigger for rastr movement
+
+    void on_actionQuit_triggered(); // Action trigger for exit
 
 private:
     Ui::MainWindow *ui;

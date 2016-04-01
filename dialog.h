@@ -29,9 +29,9 @@ class Dialog : public QDialog
 public:
     explicit Dialog(QWidget *parent = 0);
     ~Dialog();
-    bool oscillation;
-    bool mode;
-    int startStep;
+    bool oscillation; // Value for oscillation - 1=on, 0=off
+    bool mode; // Value for work mode - 1=automatic, 0=manual
+    int startStep; // Value for determining the starting step of rastr movement
 
 private slots:
     void on_pushButton_clicked();

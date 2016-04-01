@@ -37,17 +37,55 @@
 #include <QWidget>
 
 using namespace std;
-//
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),ui(new Ui::MainWindow),graphX(100),graphY(100)
+// Constructor for MainWindow
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    dialog = new Dialog(this);
-    sWindow = new StartWindow(this);
-    paintRastr1 = new PaintRastr(this);
-    paintRastr2 = new PaintRastr(this);
+
+    dialog = NULL;
+    sWindow = NULL;
+    paintRastr1 = NULL;
+    paintRastr2 = NULL;
+    try
+    {
+        dialog = new Dialog(this);
+        sWindow = new StartWindow(this);
+        paintRastr1 = new PaintRastr(this);
+        paintRastr2 = new PaintRastr(this);
+    } catch (...){
+        QMessageBox::information(this, tr("Ошибка"), tr("Недостаточно памяти для работы программы."));
+        if (NULL != dialog)
+            dialog->deleteLater();
+        if (NULL != sWindow)
+            sWindow->deleteLater();
+        if (NULL != paintRastr1)
+            paintRastr1->deleteLater();
+        if (NULL != paintRastr2)
+            paintRastr2->deleteLater();
+        exit(0);
+    }
 
     ui->verticalLayout->addWidget(paintRastr1);
     ui->verticalLayout_2->addWidget(paintRastr2);
+
+    // Hiding plots for graphs
+    ui->customPlot1->hide();
+    ui->customPlot2->hide();
+    ui->customPlot3->hide();
+
+    // Adding graphs on plots
+    ui->customPlot1->addGraph();
+    ui->customPlot2->addGraph();
+    ui->customPlot3->addGraph();
+
+    // Adding first (0) element to vectors
+    graphX.append(0);
+    graphY.append(0);
+
+    // Setting first point in graphs
+    ui->customPlot1->graph(0)->setData(graphX,graphY);
+    ui->customPlot2->graph(0)->setData(graphX,graphY);
+    ui->customPlot3->graph(0)->setData(graphX,graphY);
 
     connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(on_actionExport_clicked()));
     connect(ui->actionImport, SIGNAL(triggered()), this, SLOT(on_actionImport_clicked()));
@@ -57,89 +95,117 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),ui(new Ui::MainWin
 
 MainWindow::~MainWindow()
 {
-    paintRastr1->deleteLater();
-    paintRastr2->deleteLater();
-    delete ui;
+    paintRastr1->deleteLater(); // Clearing paintRastr1 from memory
+    paintRastr2->deleteLater(); // Clearing paintRastr2 from memory
+    delete ui; // Clearing UI from memory
 }
 
-void MainWindow::drawGraph(QCustomPlot *customPlot)
+// Function for drawing lines on graphs
+int MainWindow::drawGraph(QCustomPlot *customPlot)
 {
-
+    // Stop work if rastr, needed for work, does not exist
     if (NULL == rastrManipulation.rastr1)
-        return;
+        return 0;
 
-    graphX[paintRastr2->stepMov] = paintRastr2->stepMov;
-    graphY[paintRastr2->stepMov] = rastrManipulation.compareRastr(paintRastr2->stepMov,0);
+    try {
+        graphX.append(paintRastr2->stepMov); // Add value to vector for horizontal coordinates
+        graphY.append(rastrManipulation.compareRastr(paintRastr2->stepMov,0)); // Add value to vector for vertical coordinates
+    } catch(...){
+        return 7;
+    }
 
-    // create graph and assign data to it:
-    customPlot->addGraph();
-    customPlot->graph(0)->setData(graphX,graphY);
-    //paintRastr2->stepMov, rastrManipulation.compareRastr(0,0)
-    customPlot->replot();
+    customPlot->graph(0)->setData(graphX,graphY); // Sets point on the graph and connects it to the precious point
+    customPlot->replot(); // Refreshes the plot
 }
 
 // Error Processing Facility
-void MainWindow::errorHandling(int errorCode)
+void MainWindow::errorHandling(int errorCode) // Takes an error code and matches it with known errors. Sends message out about this error
 {
     switch(errorCode)
     {
     case 0:
-        return;
-    case 6:
-        QMessageBox::information(this, tr("Ошибка 6"), tr("Имя файла пустое."));
-        return;
+        break;
     case 2:
-        QMessageBox::information(this, tr("Ошибка 2"), tr("Не удалось открыть файл."));
-        return;
+        QMessageBox::information(this, tr("Ошибка"), tr("Не удалось открыть файл."));
+        break;
     case 3:
-        QMessageBox::information(this, tr("Ошибка 3"), tr("Неверное количество строк."));
-        return;
+        QMessageBox::information(this, tr("Ошибка"), tr("Неверное количество строк."));
+        break;
     case 4:
-        QMessageBox::information(this, tr("Ошибка 4"), tr("Неверное число элементов в строке."));
-        return;
+        QMessageBox::information(this, tr("Ошибка"), tr("Неверное число элементов в строке."));
+        break;
     case 5:
-        QMessageBox::information(this, tr("Ошибка 5"), tr("Некорректный элемент в строке."));
-        return;
+        QMessageBox::information(this, tr("Ошибка"), tr("Некорректный элемент в строке."));
+        break;
+    case 6:
+        QMessageBox::information(this, tr("Ошибка"), tr("Имя файла пустое."));
+        break;
+    case 7:
+        QMessageBox::information(this, tr("Ошибка"), tr("Сбой в построении графика."));
+        rastrManipulation.deleteArray(rastrManipulation.iRastr);
+        exit(0);
     }
 }
 
+// Triggers saving feature
 void MainWindow::on_actionSave_clicked()
 {
 
 }
 
-void MainWindow::on_pushButtonLeft_clicked()
+// Triggers the start of rastr comparison
+void MainWindow::on_pushButtonStart_clicked()
 {
-    dialog->show();
-    dialog->activateWindow();
+    if (QDialog::Accepted == dialog->exec())
+        return;
+
+    // TO DO CHECK HOW USER CLOSED THE WINDOW
+
+    paintRastr2->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
+                               rastrManipulation.iRastr, rastrManipulation.jRastr,0, Qt::black,
+                               rastrManipulation.iRastr, rastrManipulation.jRastr);
+    paintRastr2->setRastr(rastrManipulation.rastr2);
+
+    ui->pushButtonStep->setEnabled(1);
 }
 
+// Triggers the window for creating of the new rastr
+// TO DO EVERYTHING
 void MainWindow::on_actionNew_clicked()
 {
     if ((rastrManipulation.rastr1)&&(rastrManipulation.checkForSave()))
         rastrManipulation.deleteArray(rastrManipulation.iRastr);
     sWindow->show();
     sWindow->activateWindow();
-    ui->pushButtonLeft->setEnabled(1);
+    ui->pushButtonStart->setEnabled(1);
 }
 
+// Triggers import of a rastr from a text file
 void MainWindow::on_actionImport_clicked()
 {
+    // TO DO CHECK FOR EXISTING RASTR AND SEE IF USER WANTS TO SAVE IT
     QString fileName = QFileDialog::getOpenFileName(this, tr("Импортировать"),
-                                                    "", tr("Текстовый файл (*.txt);"));
+                                                    "", tr("Текстовый файл (*.txt);")); // Call for an "import" window
+    if (fileName.isEmpty())
+        return;
+
     errorHandling(rastrManipulation.importRastr(fileName));
 
     paintRastr1->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
-                               rastrManipulation.iRastr, rastrManipulation.jRastr,rastrManipulation.iRastr, Qt::gray);
-    paintRastr2->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
-                               rastrManipulation.iRastr, rastrManipulation.jRastr,0, Qt::black);
+                               rastrManipulation.iRastr, rastrManipulation.jRastr,rastrManipulation.iRastr, Qt::gray,
+                               rastrManipulation.iRastr, rastrManipulation.jRastr); // Set parameters from background rastr
+    try {
+        ui->customPlot1->show(); // Shows first graph on the main form
+    } catch (...) {
+        QMessageBox::information(this, tr("Ошибка"), tr("Сбой в построении графика."));
+        rastrManipulation.deleteArray(rastrManipulation.iRastr);
+        exit(0);
+    }
 
-    rastrManipulation.fillRastr2();
-    paintRastr1->setRastr(rastrManipulation.rastr1);
-    paintRastr2->setRastr(rastrManipulation.rastr2);
+    errorHandling(rastrManipulation.fillRastr2()); // Fills second, moving rastr
+    paintRastr1->setRastr(rastrManipulation.rastr1); // Sets matrix for background rastr
 
-    ui->pushButtonLeft->setEnabled(1);
-    ui->pushButtonStep->setEnabled(1);
+    ui->pushButtonStart->setEnabled(1); // Enables "Start" button
 
     // give the axes some labels:
     ui->customPlot1->xAxis->setLabel("");
@@ -148,20 +214,35 @@ void MainWindow::on_actionImport_clicked()
     ui->customPlot1->xAxis->setRange(0, rastrManipulation.iRastr*2);
     ui->customPlot1->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,0) + 2);
 
+    ui->actionExport->setEnabled(1);
 }
 
+// Triggers export from a rastr into a text file
 void MainWindow::on_actionExport_clicked()
 {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Экспортировать"),
-                                                    "", tr("Текстовый файл (*.txt);;Все файлы(*)"));
+                                                    "", tr("Текстовый файл (*.txt);;Все файлы(*)")); // Call for an "export" window
+    if (fileName.isEmpty())
+        return;
+
     errorHandling(rastrManipulation.exportRastr(fileName));
 }
 
+// Triggers movement of the moving rastr
 void MainWindow::on_pushButtonStep_clicked()
 {
     if (paintRastr2->stepMov < rastrManipulation.jRastr * 2)
-    paintRastr2->stepMov += 1;
-    paintRastr2->update();
+        paintRastr2->stepMov += 1;  // Do a step
+    paintRastr2->update(); // Update painted rastr with new coordinates
 
-    drawGraph(ui->customPlot1);
+    errorHandling(drawGraph(ui->customPlot1)); // Draw line in graph
+}
+
+// Quits the program
+void MainWindow::on_actionQuit_triggered()
+{
+    // TO DO CHECK FOR SAVE
+    if (NULL != rastrManipulation.rastr1)
+        rastrManipulation.deleteArray(rastrManipulation.iRastr);
+    exit(0);
 }
