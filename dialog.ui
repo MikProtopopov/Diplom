@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Начало работы</string>
   </property>
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
@@ -30,6 +30,9 @@
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEdit">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -53,6 +56,9 @@
    </property>
   </widget>
   <widget class="QComboBox" name="comboBox">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -63,12 +69,12 @@
    </property>
    <item>
     <property name="text">
-     <string>Автоматический</string>
+     <string>Ручной</string>
     </property>
    </item>
    <item>
     <property name="text">
-     <string>Ручной</string>
+     <string>Автоматический</string>
     </property>
    </item>
   </widget>
@@ -86,6 +92,9 @@
    </property>
   </widget>
   <widget class="QComboBox" name="comboBox_2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>10</x>
@@ -96,12 +105,12 @@
    </property>
    <item>
     <property name="text">
-     <string>Включена</string>
+     <string>Выключена</string>
     </property>
    </item>
    <item>
     <property name="text">
-     <string>Выключена</string>
+     <string>Включена</string>
     </property>
    </item>
   </widget>

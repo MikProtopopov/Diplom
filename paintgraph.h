@@ -23,12 +23,11 @@ class PaintGraph : public QWidget
     Q_OBJECT
 public:
     explicit PaintGraph(QWidget *parent = 0);
-    void setParameters(int height, int width, int step, int countX, int countY);
-    int ProcessX(int x);
-    int ProcessY(int y);
-    void setCount(int count);
+    void setParameters(int height, int width, int step, int countX, int countY); // Function for setting parameters of given rastrs
+    int ProcessX(int x); // Change virtual X coordinate into actual one
+    int ProcessY(int y); // Change virtual Y coordinate into actual one
     int processCount(int count);
-    int processStep(int step);
+    int processStep();
     int stepMov;
     int windowCount;
     int prevPointX;

@@ -36,4 +36,5 @@ void Dialog::on_pushButton_clicked()
     oscillation = ui->comboBox_2->currentIndex();
     mode = ui->comboBox->currentIndex();
     startStep = ui->lineEdit->text().toInt();
+    setResult(Accepted);
 }

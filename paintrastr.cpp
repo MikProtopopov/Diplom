@@ -17,6 +17,8 @@
 #include "rastrmanipulation.h"
 #include <QPainter>
 
+#define indentSpace 10
+
 // Constructor
 PaintRastr::PaintRastr(QWidget *parent) : QWidget(parent)
 {
@@ -25,22 +27,18 @@ PaintRastr::PaintRastr(QWidget *parent) : QWidget(parent)
 }
 
 // Set parameters for calculations
-void PaintRastr::setParameters(int height, int width, int axisX, int axisY, int step, QColor color)
+void PaintRastr::setParameters(int height, int width, int axisX, int axisY, int step, QColor color,
+                               int staticAxisX, int staticAxisY)
 {
-    RastrManipulation rastrManipulation;
-    windowHeight = height; // Height of the paint area
-    windowWidth = width; // Width of the paint area
-    indentSpace = 10; // Border margin
-    rastrHeight = windowHeight - 2*indentSpace; // Height of the drawn rastr
-    rastrWidth = windowWidth / 3 - 2*indentSpace; // Width of the drawn rastr
     elemCountX = axisX; // Rastr's dimentions on X axis
     elemCountY = axisY; // Rastr's dimentions on Y axis
-    cellHeight = rastrHeight / elemCountY; // Height of one cell of rastr
-    cellWidth = rastrWidth / elemCountX; // Width of one cell of rastr
+    staticX = staticAxisX;
+    staticY = staticAxisY;
+    cellHeight = (height - 2*indentSpace) / staticY; // Height of one cell of rastr
+    cellWidth = (width / 3 - 2*indentSpace) / staticX; // Width of one cell of rastr
     rastr = NULL; // Empty moving rastr
     stepMov = step;
     rastrColor = color;
-
 }
 
 // Procces coordinate on X axis
@@ -72,7 +70,7 @@ void PaintRastr::paintEvent(QPaintEvent *)
                 main.fillRect(rect,QColor(rastrColor)); // Fill rectangle
             }
         }
-    main.drawRect(ProcessX(stepMov),ProcessY(0),rastrHeight,rastrWidth);
+    main.drawRect(ProcessX(stepMov),ProcessY(0),cellHeight*elemCountX,cellWidth*elemCountY);
 }
 
 // Set moving rastr
