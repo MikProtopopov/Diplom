@@ -23,6 +23,7 @@ Dialog::Dialog(QWidget *parent) :
     ui->setupUi(this);
     ui->lineEdit->setText("0");
     startStep = -1;
+
     connect(ui->pushButton,SIGNAL(clicked()),this,SLOT(close()));
 }
 
