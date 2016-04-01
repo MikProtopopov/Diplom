@@ -19,7 +19,6 @@ SOURCES += main.cpp\
     rastrmanipulation.cpp \
     paintrastr.cpp \
     mainwindow.cpp \
-    paintgraph.cpp \
     qcustomplot.cpp
 
 HEADERS  += \
@@ -28,7 +27,6 @@ HEADERS  += \
     rastrmanipulation.h \
     paintrastr.h \
     mainwindow.h \
-    paintgraph.h \
     qcustomplot.h
 
 FORMS    += \

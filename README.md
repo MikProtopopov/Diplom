@@ -1,2 +1,2 @@
-# Diplom PreAlpha v1
-
+# Diplom
+Place where i put stuff about things
