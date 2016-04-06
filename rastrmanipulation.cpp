@@ -32,7 +32,7 @@ RastrManipulation::RastrManipulation()
 {
     rastr1 = NULL;
     rastr2 = NULL;
-    oscillation = 0; // crashes with 1
+    oscillation = 1;
 }
 
 int RastrManipulation::checkForSave()

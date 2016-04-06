@@ -29,6 +29,7 @@ public:
     void setRastr(int **&localRastr); // Set rastr, which will be painted by the widget
     int **rastr; // Rastr for painting
     int stepMov; // Step of movement
+    int oStatus; // Counts the amount of vertical changes during oscillation
 
 
 protected:
@@ -41,6 +42,7 @@ private:
     int cellWidth; // Width of one cell
     int staticX; // "Static" coordinate for X, for painting rastr while oscillation is on
     int staticY; // "Static" coordinate for Y, for painting rastr while oscillation is on
+
     QColor rastrColor; // Value for color, to distinguish between background and moving rastrs
 
 

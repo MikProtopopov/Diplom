@@ -39,18 +39,20 @@ void PaintRastr::setParameters(int height, int width, int axisX, int axisY, int 
     rastr = NULL; // Empty moving rastr
     stepMov = step;
     rastrColor = color;
+    oStatus = 0;
 }
 
 // Procces coordinate on X axis
 int PaintRastr::ProcessX(int i)
 {
    return indentSpace + i*cellHeight;
+
 }
 
 // Procces coordinate on Y axis
 int PaintRastr::ProcessY(int j)
 {
-   return indentSpace + j*cellWidth;
+   return indentSpace + j*cellWidth - (oStatus % 2)*cellWidth;
 }
 
 // Drawing
@@ -70,7 +72,7 @@ void PaintRastr::paintEvent(QPaintEvent *)
                 main.fillRect(rect,QColor(rastrColor)); // Fill rectangle
             }
         }
-    main.drawRect(ProcessX(stepMov),ProcessY(0),cellHeight*elemCountX,cellWidth*elemCountY);
+    main.drawRect(ProcessX(stepMov),ProcessY(0),cellHeight*elemCountY,cellWidth*elemCountX);
 }
 
 // Set moving rastr

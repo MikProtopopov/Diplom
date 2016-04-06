@@ -162,8 +162,8 @@ void MainWindow::on_pushButtonStart_clicked()
     // TO DO CHECK HOW USER CLOSED THE WINDOW
 
     paintRastr2->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
-                               rastrManipulation.iRastr, rastrManipulation.jRastr,0, Qt::black,
-                               rastrManipulation.iRastr, rastrManipulation.jRastr);
+                               rastrManipulation.iRastr - rastrManipulation.oscillation, rastrManipulation.jRastr,0, Qt::black,
+                               rastrManipulation.iRastr, rastrManipulation.jRastr); // Set parameters for moving rastr
     paintRastr2->setRastr(rastrManipulation.rastr2);
 
     ui->pushButtonStep->setEnabled(1);
@@ -192,8 +192,8 @@ void MainWindow::on_actionImport_clicked()
     errorHandling(rastrManipulation.importRastr(fileName));
 
     paintRastr1->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
-                               rastrManipulation.iRastr, rastrManipulation.jRastr,rastrManipulation.iRastr, Qt::gray,
-                               rastrManipulation.iRastr, rastrManipulation.jRastr); // Set parameters from background rastr
+                               rastrManipulation.iRastr, rastrManipulation.jRastr,rastrManipulation.jRastr, Qt::gray,
+                               rastrManipulation.iRastr, rastrManipulation.jRastr); // Set parameters for background rastr
     try {
         ui->customPlot1->show(); // Shows first graph on the main form
     } catch (...) {
@@ -231,8 +231,17 @@ void MainWindow::on_actionExport_clicked()
 // Triggers movement of the moving rastr
 void MainWindow::on_pushButtonStep_clicked()
 {
-    if (paintRastr2->stepMov < rastrManipulation.jRastr * 2)
-        paintRastr2->stepMov += 1;  // Do a step
+    if (1 == rastrManipulation.oscillation)
+    {
+        if ((paintRastr2->stepMov < rastrManipulation.jRastr * 2)&&(paintRastr2->stepMov == paintRastr2->oStatus))
+            paintRastr2->stepMov += 1;  // Do a step
+        else
+            paintRastr2->oStatus += 1;
+    }
+    else
+        if (paintRastr2->stepMov < rastrManipulation.jRastr * 2)
+            paintRastr2->stepMov += 1;  // Do a step
+
     paintRastr2->update(); // Update painted rastr with new coordinates
 
     errorHandling(drawGraph(ui->customPlot1)); // Draw line in graph
