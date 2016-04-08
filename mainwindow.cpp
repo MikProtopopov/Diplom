@@ -253,13 +253,13 @@ void MainWindow::on_actionImport_clicked()
     ui->customPlot1->yAxis->setLabel("");
     // set axes ranges, so we see all data:
     ui->customPlot1->xAxis->setRange(0, rastrManipulation.iRastr*2);
-    ui->customPlot1->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,0)*2);
+    ui->customPlot1->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,0) + 2);
 
     ui->customPlot2->xAxis->setLabel("");
     ui->customPlot2->yAxis->setLabel("");
     // set axes ranges, so we see all data:
     ui->customPlot2->xAxis->setRange(0, rastrManipulation.iRastr*2);
-    ui->customPlot2->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,0)*2);
+    ui->customPlot2->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,0) + 2);
 
     ui->customPlot3->xAxis->setLabel("");
     ui->customPlot3->yAxis->setLabel("");
@@ -287,17 +287,18 @@ void MainWindow::on_pushButtonStep_clicked()
     if (1 == rastrManipulation.oscillation)
     {
         if ((paintRastr2->stepMov < rastrManipulation.jRastr * 2)&&(paintRastr2->stepMov == paintRastr2->oStatus))
-        {
             paintRastr2->stepMov += 1;  // Do a step
-            errorHandling(drawGraph(ui->customPlot1)); // Draw line in graph 1
+        else
+            paintRastr2->oStatus += 1;
 
-        }
+        if (0 == paintRastr2->oStatus % 2)
+            errorHandling(drawGraph(ui->customPlot1)); // Draw line in graph 1
         else
         {
-            paintRastr2->oStatus += 1;
             errorHandling(drawGraphOsci(ui->customPlot2)); // Draw line in graph 2
             errorHandling(drawGraphCompare(ui->customPlot3)); // Draw line in graph 3
         }
+
     }
     else
         if (paintRastr2->stepMov < rastrManipulation.jRastr * 2)

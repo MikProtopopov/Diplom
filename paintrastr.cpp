@@ -34,8 +34,8 @@ void PaintRastr::setParameters(int height, int width, int axisX, int axisY, int 
     elemCountY = axisY; // Rastr's dimentions on Y axis
     staticX = staticAxisX;
     staticY = staticAxisY;
-    cellHeight = (height - 2*indentSpace) / staticY; // Height of one cell of rastr
-    cellWidth = (width / 3 - 2*indentSpace) / staticX; // Width of one cell of rastr
+    cellHeight = (height - 2*indentSpace) / staticX; // Height of one cell of rastr
+    cellWidth = (width / 3 - 2*indentSpace) / staticY; // Width of one cell of rastr
     rastr = NULL; // Empty moving rastr
     stepMov = step;
     rastrColor = color;
@@ -52,7 +52,7 @@ int PaintRastr::ProcessX(int i)
 // Procces coordinate on Y axis
 int PaintRastr::ProcessY(int j)
 {
-   return indentSpace + j*cellWidth + (oStatus % 2)*cellWidth;
+   return indentSpace + (j + abs(staticX-elemCountX))*cellWidth - (oStatus % 2)*cellWidth;
 }
 
 // Drawing
