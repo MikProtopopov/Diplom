@@ -52,7 +52,7 @@ int PaintRastr::ProcessX(int i)
 // Procces coordinate on Y axis
 int PaintRastr::ProcessY(int j)
 {
-   return indentSpace + j*cellWidth - (oStatus % 2)*cellWidth;
+   return indentSpace + j*cellWidth + (oStatus % 2)*cellWidth;
 }
 
 // Drawing
