@@ -37,13 +37,20 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void errorHandling(int);
-    int drawGraph(QCustomPlot *customPlot);
+    int drawGraph(QCustomPlot *customPlot); // Draw non-oscillated graph
+    int drawGraphOsci(QCustomPlot *customPlot); // Draw graph for oscillation
+    int drawGraphCompare(QCustomPlot *customPlot); // Draw graph for comparison
     RastrManipulation rastrManipulation; // Exemplar of RastrManipulation class
     PaintRastr *paintRastr1; // Exemplar of PaintRastr class for moving rastr
     PaintRastr *paintRastr2; // Exemplar of PaintRastr class for not moving rastr
 
     QVector<double> graphX; // Vector for drawing of graph, for X axis
-    QVector<double> graphY; // Vector for drawing of graph, for Y axis
+    QVector<double> graphXOsci; // Vector for drawing of graph, for X axis, for oscillated graph
+    QVector<double> graphXComp; // Vector for drawing of graph, for X axis, for comparison graph
+
+    QVector<double> graphY; // Vector for drawing of graph, for Y axis, for non-oscillated graph
+    QVector<double> graphYOsci; // Vector for drawing of graph, for Y axis, for oscillated graph
+    QVector<double> graphYComp; // Vector for drawing of graph, for Y axis, for comparison graph
 
 private slots:
     void on_pushButtonStart_clicked(); // Action trigger for starting rastr movement

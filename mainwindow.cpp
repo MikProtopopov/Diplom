@@ -84,8 +84,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),ui(new Ui::MainWin
 
     // Setting first point in graphs
     ui->customPlot1->graph(0)->setData(graphX,graphY);
-    ui->customPlot2->graph(0)->setData(graphX,graphY);
-    ui->customPlot3->graph(0)->setData(graphX,graphY);
+    ui->customPlot2->graph(0)->setData(graphXOsci,graphYOsci);
+    ui->customPlot3->graph(0)->setData(graphXComp,graphYComp);
 
     connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(on_actionExport_clicked()));
     connect(ui->actionImport, SIGNAL(triggered()), this, SLOT(on_actionImport_clicked()));
@@ -116,6 +116,45 @@ int MainWindow::drawGraph(QCustomPlot *customPlot)
 
     customPlot->graph(0)->setData(graphX,graphY); // Sets point on the graph and connects it to the precious point
     customPlot->replot(); // Refreshes the plot
+    return 0;
+}
+
+int MainWindow::drawGraphOsci(QCustomPlot *customPlot)
+{
+    // Stop work if rastr, needed for work, does not exist
+    if (NULL == rastrManipulation.rastr1)
+        return 0;
+
+    try {
+        graphXOsci.append(paintRastr2->stepMov); // Add value to vector for horizontal coordinates
+        graphYOsci.append(rastrManipulation.compareRastr(paintRastr2->stepMov,1)); // Add value to vector for vertical coordinates
+    } catch(...){
+        return 7;
+    }
+
+    customPlot->graph(0)->setData(graphXOsci,graphYOsci); // Sets point on the graph and connects it to the precious point
+    customPlot->replot(); // Refreshes the plot
+    return 0;
+}
+
+int MainWindow::drawGraphCompare(QCustomPlot *customPlot)
+{
+    // Stop work if rastr, needed for work, does not exist
+    if (NULL == rastrManipulation.rastr1)
+        return 0;
+
+    try {
+        graphXComp.append(paintRastr2->stepMov); // Add value to vector for horizontal coordinates
+        graphYComp.append(
+                    (abs(rastrManipulation.compareRastr(paintRastr2->stepMov,0) - rastrManipulation.compareRastr(paintRastr2->stepMov,1))
+                    + (rastrManipulation.compareRastr(paintRastr2->stepMov,0) - rastrManipulation.compareRastr(paintRastr2->stepMov,1))) / 2); // Add value to vector for vertical coordinates
+    } catch(...){
+        return 7;
+    }
+
+    customPlot->graph(0)->setData(graphXComp,graphYComp); // Sets point on the graph and connects it to the precious point
+    customPlot->replot(); // Refreshes the plot
+    return 0;
 }
 
 // Error Processing Facility
@@ -196,6 +235,8 @@ void MainWindow::on_actionImport_clicked()
                                rastrManipulation.iRastr, rastrManipulation.jRastr); // Set parameters for background rastr
     try {
         ui->customPlot1->show(); // Shows first graph on the main form
+        ui->customPlot2->show();
+        ui->customPlot3->show();
     } catch (...) {
         QMessageBox::information(this, tr("Ошибка"), tr("Сбой в построении графика."));
         rastrManipulation.deleteArray(rastrManipulation.iRastr);
@@ -212,7 +253,19 @@ void MainWindow::on_actionImport_clicked()
     ui->customPlot1->yAxis->setLabel("");
     // set axes ranges, so we see all data:
     ui->customPlot1->xAxis->setRange(0, rastrManipulation.iRastr*2);
-    ui->customPlot1->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,0) + 2);
+    ui->customPlot1->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,0)*2);
+
+    ui->customPlot2->xAxis->setLabel("");
+    ui->customPlot2->yAxis->setLabel("");
+    // set axes ranges, so we see all data:
+    ui->customPlot2->xAxis->setRange(0, rastrManipulation.iRastr*2);
+    ui->customPlot2->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,0)*2);
+
+    ui->customPlot3->xAxis->setLabel("");
+    ui->customPlot3->yAxis->setLabel("");
+    // set axes ranges, so we see all data:
+    ui->customPlot3->xAxis->setRange(0, rastrManipulation.iRastr*2);
+    ui->customPlot3->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,0) + 2);
 
     ui->actionExport->setEnabled(1);
 }
@@ -234,17 +287,26 @@ void MainWindow::on_pushButtonStep_clicked()
     if (1 == rastrManipulation.oscillation)
     {
         if ((paintRastr2->stepMov < rastrManipulation.jRastr * 2)&&(paintRastr2->stepMov == paintRastr2->oStatus))
+        {
             paintRastr2->stepMov += 1;  // Do a step
+            errorHandling(drawGraph(ui->customPlot1)); // Draw line in graph 1
+
+        }
         else
+        {
             paintRastr2->oStatus += 1;
+            errorHandling(drawGraphOsci(ui->customPlot2)); // Draw line in graph 2
+            errorHandling(drawGraphCompare(ui->customPlot3)); // Draw line in graph 3
+        }
     }
     else
         if (paintRastr2->stepMov < rastrManipulation.jRastr * 2)
+        {
             paintRastr2->stepMov += 1;  // Do a step
+            errorHandling(drawGraph(ui->customPlot1)); // Draw line in graph 1
+        }
 
     paintRastr2->update(); // Update painted rastr with new coordinates
-
-    errorHandling(drawGraph(ui->customPlot1)); // Draw line in graph
 }
 
 // Quits the program
