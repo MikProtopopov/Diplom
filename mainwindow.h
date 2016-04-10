@@ -13,8 +13,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef DIPLOM_H
-#define DIPLOM_H
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
 #include <QMainWindow>
 #include <QWidget>
@@ -92,4 +92,4 @@ private:
     void on_actionSave_clicked();
 };
 
-#endif // DIPLOM_H
+#endif // MAINWINDOW_H
