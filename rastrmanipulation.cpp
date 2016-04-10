@@ -206,9 +206,9 @@ int RastrManipulation::compareRastr(int stepHorisontal, int stepVertical)
                 countWindow += rastr2[i][jRastr - columns + j] * rastr1[i][j];
 
     if (1 == oscillation)
-        for (int i=0; i<iRastr - stepVertical - 1; i++)
+        for (int i=0; i<iRastr - 1; i++)
             for (int j=0; j<columns; j++)
-                countWindow += rastr2[i + stepVertical][jRastr - columns + j] * rastr1[i][j];
+                countWindow += rastr2[i][jRastr - columns + j] * rastr1[i + stepVertical][(abs(stepHorisontal - jRastr) + (stepHorisontal - jRastr))/2];
 
     return countWindow;
 }

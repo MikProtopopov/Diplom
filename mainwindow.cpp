@@ -100,7 +100,7 @@ MainWindow::~MainWindow()
     delete ui; // Clearing UI from memory
 }
 
-// Function for drawing lines on graphs
+// Function for drawing lines on non-oscillated graph
 int MainWindow::drawGraph(QCustomPlot *customPlot)
 {
     // Stop work if rastr, needed for work, does not exist
@@ -109,7 +109,7 @@ int MainWindow::drawGraph(QCustomPlot *customPlot)
 
     try {
         graphX.append(paintRastr2->stepMov); // Add value to vector for horizontal coordinates
-        graphY.append(rastrManipulation.compareRastr(paintRastr2->stepMov,0)); // Add value to vector for vertical coordinates
+        graphY.append(rastrManipulation.compareRastr(paintRastr2->stepMov,1)); // Add value to vector for vertical coordinates
     } catch(...){
         return 7;
     }
@@ -119,6 +119,7 @@ int MainWindow::drawGraph(QCustomPlot *customPlot)
     return 0;
 }
 
+// Function for drawing lines on oscillated graph
 int MainWindow::drawGraphOsci(QCustomPlot *customPlot)
 {
     // Stop work if rastr, needed for work, does not exist
@@ -127,7 +128,7 @@ int MainWindow::drawGraphOsci(QCustomPlot *customPlot)
 
     try {
         graphXOsci.append(paintRastr2->stepMov); // Add value to vector for horizontal coordinates
-        graphYOsci.append(rastrManipulation.compareRastr(paintRastr2->stepMov,1)); // Add value to vector for vertical coordinates
+        graphYOsci.append(rastrManipulation.compareRastr(paintRastr2->stepMov,0)); // Add value to vector for vertical coordinates
     } catch(...){
         return 7;
     }
@@ -137,6 +138,7 @@ int MainWindow::drawGraphOsci(QCustomPlot *customPlot)
     return 0;
 }
 
+// Function for drawing lines on comparison graph
 int MainWindow::drawGraphCompare(QCustomPlot *customPlot)
 {
     // Stop work if rastr, needed for work, does not exist
@@ -146,8 +148,8 @@ int MainWindow::drawGraphCompare(QCustomPlot *customPlot)
     try {
         graphXComp.append(paintRastr2->stepMov); // Add value to vector for horizontal coordinates
         graphYComp.append(
-                    (abs(rastrManipulation.compareRastr(paintRastr2->stepMov,0) - rastrManipulation.compareRastr(paintRastr2->stepMov,1))
-                    + (rastrManipulation.compareRastr(paintRastr2->stepMov,0) - rastrManipulation.compareRastr(paintRastr2->stepMov,1))) / 2); // Add value to vector for vertical coordinates
+                    (abs(rastrManipulation.compareRastr(paintRastr2->stepMov,1) - rastrManipulation.compareRastr(paintRastr2->stepMov,0))
+                    + (rastrManipulation.compareRastr(paintRastr2->stepMov,1) - rastrManipulation.compareRastr(paintRastr2->stepMov,0))) / 2); // Difference between rastrs
     } catch(...){
         return 7;
     }
@@ -253,19 +255,26 @@ void MainWindow::on_actionImport_clicked()
     ui->customPlot1->yAxis->setLabel("");
     // set axes ranges, so we see all data:
     ui->customPlot1->xAxis->setRange(0, rastrManipulation.iRastr*2);
-    ui->customPlot1->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,0) + 2);
+    ui->customPlot1->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,1) + 2);
 
     ui->customPlot2->xAxis->setLabel("");
     ui->customPlot2->yAxis->setLabel("");
     // set axes ranges, so we see all data:
     ui->customPlot2->xAxis->setRange(0, rastrManipulation.iRastr*2);
-    ui->customPlot2->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,0) + 2);
+    ui->customPlot2->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,1) + 2);
 
     ui->customPlot3->xAxis->setLabel("");
     ui->customPlot3->yAxis->setLabel("");
     // set axes ranges, so we see all data:
     ui->customPlot3->xAxis->setRange(0, rastrManipulation.iRastr*2);
-    ui->customPlot3->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,0) + 2);
+    ui->customPlot3->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,1) + 2);
+
+    errorHandling(drawGraph(ui->customPlot1)); // Draw line in graph 1
+    if (1 == rastrManipulation.oscillation)
+    {
+        errorHandling(drawGraphOsci(ui->customPlot2)); // Draw line in graph 2
+        errorHandling(drawGraphCompare(ui->customPlot3)); // Draw line in graph 3
+    }
 
     ui->actionExport->setEnabled(1);
 }
@@ -298,7 +307,6 @@ void MainWindow::on_pushButtonStep_clicked()
             errorHandling(drawGraphOsci(ui->customPlot2)); // Draw line in graph 2
             errorHandling(drawGraphCompare(ui->customPlot3)); // Draw line in graph 3
         }
-
     }
     else
         if (paintRastr2->stepMov < rastrManipulation.jRastr * 2)
