@@ -81,6 +81,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),ui(new Ui::MainWin
     // Adding first (0) element to vectors
     graphX.append(0);
     graphY.append(0);
+    graphXOsci.append(0);
+    graphYOsci.append(0);
+    graphXComp.append(0);
+    graphYComp.append(0);
 
     // Setting first point in graphs
     ui->customPlot1->graph(0)->setData(graphX,graphY);
@@ -225,6 +229,40 @@ void MainWindow::on_actionNew_clicked()
 void MainWindow::on_actionImport_clicked()
 {
     // TO DO CHECK FOR EXISTING RASTR AND SEE IF USER WANTS TO SAVE IT
+
+    // Clearing vector for non-oscilated graph if not empty
+    if ((!graphX.isEmpty()) || (!graphY.isEmpty())){
+        graphX.clear();
+        graphY.clear();
+
+        graphX.append(0);
+        graphY.append(0);
+
+        ui->customPlot1->replot();
+    }
+
+    // Clearing vector for oscilated graph if not empty
+    if ((!graphXOsci.isEmpty()) || (!graphYOsci.isEmpty())){
+        graphXOsci.clear();
+        graphYOsci.clear();
+
+        graphXOsci.append(0);
+        graphYOsci.append(0);
+
+        ui->customPlot2->replot();
+    }
+
+    // Clearing vector for comparison oscilated graph if not empty
+    if ((!graphXComp.isEmpty()) || (!graphYComp.isEmpty())){
+        graphXComp.clear();
+        graphYComp.clear();
+
+        graphXComp.append(0);
+        graphYComp.append(0);
+
+        ui->customPlot3->replot();
+    }
+
     QString fileName = QFileDialog::getOpenFileName(this, tr("Импортировать"),
                                                     "", tr("Текстовый файл (*.txt);")); // Call for an "import" window
     if (fileName.isEmpty())
@@ -298,7 +336,8 @@ void MainWindow::on_pushButtonStep_clicked()
         if ((paintRastr2->stepMov < rastrManipulation.jRastr * 2)&&(paintRastr2->stepMov == paintRastr2->oStatus))
             paintRastr2->stepMov += 1;  // Do a step
         else
-            paintRastr2->oStatus += 1;
+            if (paintRastr2->oStatus < rastrManipulation.jRastr * 2)
+                paintRastr2->oStatus += 1;
 
         if (0 == paintRastr2->oStatus % 2)
             errorHandling(drawGraph(ui->customPlot1)); // Draw line in graph 1
@@ -325,4 +364,9 @@ void MainWindow::on_actionQuit_triggered()
     if (NULL != rastrManipulation.rastr1)
         rastrManipulation.deleteArray(rastrManipulation.iRastr);
     exit(0);
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+
 }
