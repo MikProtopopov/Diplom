@@ -53,6 +53,7 @@ public:
     QVector<double> graphYComp; // Vector for drawing of graph, for Y axis, for comparison graph
 
 private slots:
+    void clearVectors();
     void on_pushButtonStart_clicked(); // Action trigger for starting rastr movement
     void on_actionExport_clicked(); // Action trigger for export
     void on_actionImport_clicked(); // Action trigger for import
