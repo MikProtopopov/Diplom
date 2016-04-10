@@ -62,6 +62,8 @@ private slots:
 
     void on_actionQuit_triggered(); // Action trigger for exit
 
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     Dialog *dialog;
