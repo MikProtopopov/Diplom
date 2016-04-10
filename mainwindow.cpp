@@ -123,6 +123,36 @@ int MainWindow::drawGraph(QCustomPlot *customPlot)
     return 0;
 }
 
+void MainWindow::clearVectors()
+{
+    if (!graphX.isEmpty())
+    {
+        graphX.clear();
+        graphY.clear();
+
+        graphX.append(0);
+        graphY.append(0);
+
+        ui->customPlot1->replot();
+
+        if (!graphXOsci.isEmpty())
+        {
+            graphXOsci.clear();
+            graphYOsci.clear();
+            graphXComp.clear();
+            graphYComp.clear();
+
+            graphXOsci.append(0);
+            graphYOsci.append(0);
+            graphXComp.append(0);
+            graphYComp.append(0);
+
+            ui->customPlot2->replot();
+            ui->customPlot3->replot();
+        }
+    }
+}
+
 // Function for drawing lines on oscillated graph
 int MainWindow::drawGraphOsci(QCustomPlot *customPlot)
 {
@@ -201,15 +231,22 @@ void MainWindow::on_actionSave_clicked()
 // Triggers the start of rastr comparison
 void MainWindow::on_pushButtonStart_clicked()
 {
+
+
     if (QDialog::Accepted == dialog->exec())
         return;
 
-    // TO DO CHECK HOW USER CLOSED THE WINDOW
+   // TO DO CHECK HOW USER CLOSED THE WINDOW
 
     paintRastr2->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
                                rastrManipulation.iRastr - rastrManipulation.oscillation, rastrManipulation.jRastr,0, Qt::black,
                                rastrManipulation.iRastr, rastrManipulation.jRastr); // Set parameters for moving rastr
     paintRastr2->setRastr(rastrManipulation.rastr2);
+
+    clearVectors();
+
+    // Clearing vector for oscilated graph if not empty
+
 
     ui->pushButtonStep->setEnabled(1);
 }
@@ -229,39 +266,6 @@ void MainWindow::on_actionNew_clicked()
 void MainWindow::on_actionImport_clicked()
 {
     // TO DO CHECK FOR EXISTING RASTR AND SEE IF USER WANTS TO SAVE IT
-
-    // Clearing vector for non-oscilated graph if not empty
-    if ((!graphX.isEmpty()) || (!graphY.isEmpty())){
-        graphX.clear();
-        graphY.clear();
-
-        graphX.append(0);
-        graphY.append(0);
-
-        ui->customPlot1->replot();
-    }
-
-    // Clearing vector for oscilated graph if not empty
-    if ((!graphXOsci.isEmpty()) || (!graphYOsci.isEmpty())){
-        graphXOsci.clear();
-        graphYOsci.clear();
-
-        graphXOsci.append(0);
-        graphYOsci.append(0);
-
-        ui->customPlot2->replot();
-    }
-
-    // Clearing vector for comparison oscilated graph if not empty
-    if ((!graphXComp.isEmpty()) || (!graphYComp.isEmpty())){
-        graphXComp.clear();
-        graphYComp.clear();
-
-        graphXComp.append(0);
-        graphYComp.append(0);
-
-        ui->customPlot3->replot();
-    }
 
     QString fileName = QFileDialog::getOpenFileName(this, tr("Импортировать"),
                                                     "", tr("Текстовый файл (*.txt);")); // Call for an "import" window

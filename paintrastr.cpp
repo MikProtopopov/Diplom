@@ -58,10 +58,10 @@ int PaintRastr::ProcessY(int j)
 // Drawing
 void PaintRastr::paintEvent(QPaintEvent *)
 {
-    QPainter main(this);
-    main.setPen(QPen(rastrColor,2,Qt::SolidLine));
     if (NULL == rastr)
         return;
+    QPainter main(this);
+    main.setPen(QPen(rastrColor,2,Qt::SolidLine));
     for (int i=0; i < elemCountY; i++)
         for (int j=0; j < elemCountX; j++)
         {

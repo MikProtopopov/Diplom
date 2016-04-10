@@ -63,12 +63,11 @@ void RastrManipulation::createNewRastr(const int &xInt, const int &yInt)
 void RastrManipulation::deleteArray(int DeleteLines) // DeleteLines - number of lines in array we are deleting
 {
     for (int i=0; i<DeleteLines; i++)
-    {
         delete[] rastr1[i];
-        delete[] rastr2[i];
-    }
     delete[] rastr1;
     delete[] rastr2;
+    rastr1 = NULL;
+    rastr2 = NULL;
 }
 
 // Import matrix from file
