@@ -32,7 +32,7 @@
       <x>10</x>
       <y>10</y>
       <width>780</width>
-      <height>270</height>
+      <height>271</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -40,6 +40,18 @@
       <horstretch>1</horstretch>
       <verstretch>1</verstretch>
      </sizepolicy>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="backgroundBrush">
+     <brush brushstyle="NoBrush">
+      <color alpha="255">
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </brush>
     </property>
    </widget>
    <widget class="QGraphicsView" name="graphicsView_2">
@@ -125,7 +137,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>531</width>
+      <width>781</width>
       <height>271</height>
      </rect>
     </property>
@@ -192,7 +204,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="pushButtonColor">
     <property name="geometry">
      <rect>
       <x>740</x>

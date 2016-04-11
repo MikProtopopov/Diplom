@@ -23,10 +23,14 @@ class PaintRastr : public QWidget
     Q_OBJECT
 public:
     explicit PaintRastr(QWidget *parent = 0);
-    void setParameters(int height, int width, int axisX, int axisY, int step, QColor color, int staticAxisX, int staticAxisY); // Set parameters of graphs
+    void setParameters(int height, int width, int axisX, int axisY, int step, QColor color, int staticAxisX, int staticAxisY, int typeOfRastr); // Set parameters of graphs
     int ProcessX(int i); // Change virtual X coordinate into actual one
     int ProcessY(int j); // Change virtual Y coordinate into actual one
     void setRastr(int **&localRastr); // Set rastr, which will be painted by the widget
+    void setBGColor(QColor color);
+    void setRastrColor(QColor color0, QColor color1);
+    QColor getBGColor();
+    void drawBackground(QColor color);
     int **rastr; // Rastr for painting
     int stepMov; // Step of movement
     int oStatus; // Counts the amount of vertical changes during oscillation
@@ -42,8 +46,11 @@ private:
     int cellWidth; // Width of one cell
     int staticX; // "Static" coordinate for X, for painting rastr while oscillation is on
     int staticY; // "Static" coordinate for Y, for painting rastr while oscillation is on
+    int rastrType;
 
-    QColor rastrColor; // Value for color, to distinguish between background and moving rastrs
+    QColor rastrColor; // Value for color, to distinguish between stationary and moving rastrs
+    QColor bgColor; // Value for color of the background for stationary rastr
+    QColor cellColor; // Color of cells of rastr
 
 
 signals:

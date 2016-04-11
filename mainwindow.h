@@ -22,7 +22,7 @@
 #include "startwindow.h"
 #include "rastrmanipulation.h"
 #include "paintrastr.h"
-#include "paintgraph.h"
+
 #include "qcustomplot.h"
 
 namespace Ui {
@@ -40,6 +40,7 @@ public:
     int drawGraph(QCustomPlot *customPlot); // Draw non-oscillated graph
     int drawGraphOsci(QCustomPlot *customPlot); // Draw graph for oscillation
     int drawGraphCompare(QCustomPlot *customPlot); // Draw graph for comparison
+    void checkForSave();
     RastrManipulation rastrManipulation; // Exemplar of RastrManipulation class
     PaintRastr *paintRastr1; // Exemplar of PaintRastr class for moving rastr
     PaintRastr *paintRastr2; // Exemplar of PaintRastr class for not moving rastr
@@ -63,7 +64,8 @@ private slots:
 
     void on_actionQuit_triggered(); // Action trigger for exit
 
-    void on_pushButton_clicked();
+
+    void on_pushButtonColor_clicked();
 
 private:
     Ui::MainWindow *ui;
