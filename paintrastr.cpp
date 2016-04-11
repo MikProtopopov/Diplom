@@ -24,11 +24,12 @@ PaintRastr::PaintRastr(QWidget *parent) : QWidget(parent)
 {
     rastr = NULL;
     stepMov = 0;
+    bgColor = Qt::white;
 }
 
 // Set parameters for calculations
 void PaintRastr::setParameters(int height, int width, int axisX, int axisY, int step, QColor color,
-                               int staticAxisX, int staticAxisY)
+                               int staticAxisX, int staticAxisY, int typeOfRastr)
 {
     elemCountX = axisX; // Rastr's dimentions on X axis
     elemCountY = axisY; // Rastr's dimentions on Y axis
@@ -40,6 +41,26 @@ void PaintRastr::setParameters(int height, int width, int axisX, int axisY, int 
     stepMov = step;
     rastrColor = color;
     oStatus = 0;
+    rastrType = typeOfRastr;
+    cellColor = Qt::white;
+}
+
+void PaintRastr::setBGColor(QColor color)
+{
+    bgColor = color;
+}
+
+// Returns the color
+QColor PaintRastr::getBGColor()
+{
+    return bgColor;
+}
+
+// Set new color for drawing background rastr
+void PaintRastr::setRastrColor(QColor color0, QColor color1)
+{
+    rastrColor = color0;
+    cellColor = color1;
 }
 
 // Procces coordinate on X axis
@@ -60,8 +81,18 @@ void PaintRastr::paintEvent(QPaintEvent *)
 {
     if (NULL == rastr)
         return;
+
+    if (0 == rastrType)
+    {
+        QPainter bg(this);
+        bg.setPen(QPen(bgColor,1,Qt::SolidLine));
+        QRect bgRect = QRect(0,0, 780, 270); // CHANGE 780 and 270 FOR ACTUAL VARIABLES WITH H/W OF GRAPHICSVIEW_1
+        bg.fillRect(bgRect,QColor(bgColor));
+    }
+
     QPainter main(this);
-    main.setPen(QPen(rastrColor,2,Qt::SolidLine));
+    main.setPen(QPen(rastrColor,1,Qt::SolidLine));
+
     for (int i=0; i < elemCountY; i++)
         for (int j=0; j < elemCountX; j++)
         {
@@ -70,6 +101,12 @@ void PaintRastr::paintEvent(QPaintEvent *)
                 QRect rect = QRect(ProcessX(i + stepMov),ProcessY(j),cellHeight,
                                cellWidth); // Draw rectangle
                 main.fillRect(rect,QColor(rastrColor)); // Fill rectangle
+            }
+            if ((1 == rastr[j][i]) && (0 == rastrType))
+            {
+                QRect rect = QRect(ProcessX(i + stepMov),ProcessY(j),cellHeight,
+                               cellWidth); // Draw rectangle
+                main.fillRect(rect,QColor(cellColor)); // Fill rectangle
             }
         }
     main.drawRect(ProcessX(stepMov),ProcessY(0),cellHeight*elemCountY,cellWidth*elemCountX);

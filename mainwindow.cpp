@@ -123,6 +123,22 @@ int MainWindow::drawGraph(QCustomPlot *customPlot)
     return 0;
 }
 
+void MainWindow::checkForSave()
+{
+    QMessageBox::StandardButton reply;
+     reply = QMessageBox::question(this, "Несохраненные данные", "Сохранить текущую матрицу?",
+                                   QMessageBox::Yes|QMessageBox::No);
+     if (reply == QMessageBox::Yes)
+     {
+         QString fileName = QFileDialog::getSaveFileName(this, tr("Экспортировать"),
+                                                         "", tr("Текстовый файл (*.txt);;Все файлы(*)")); // Call for an "export" window
+         if (fileName.isEmpty())
+             return;
+
+         errorHandling(rastrManipulation.exportRastr(fileName));
+     }
+}
+
 void MainWindow::clearVectors()
 {
     if (!graphX.isEmpty())
@@ -133,6 +149,7 @@ void MainWindow::clearVectors()
         graphX.append(0);
         graphY.append(0);
 
+        ui->customPlot1->graph()->clearData();
         ui->customPlot1->replot();
 
         if (!graphXOsci.isEmpty())
@@ -147,6 +164,8 @@ void MainWindow::clearVectors()
             graphXComp.append(0);
             graphYComp.append(0);
 
+            ui->customPlot2->graph()->clearData();
+            ui->customPlot3->graph()->clearData();
             ui->customPlot2->replot();
             ui->customPlot3->replot();
         }
@@ -238,9 +257,10 @@ void MainWindow::on_pushButtonStart_clicked()
 
    // TO DO CHECK HOW USER CLOSED THE WINDOW
 
+    paintRastr2->setBGColor(Qt::white);
     paintRastr2->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
                                rastrManipulation.iRastr - rastrManipulation.oscillation, rastrManipulation.jRastr,0, Qt::black,
-                               rastrManipulation.iRastr, rastrManipulation.jRastr); // Set parameters for moving rastr
+                               rastrManipulation.iRastr, rastrManipulation.jRastr, 1); // Set parameters for moving rastr
     paintRastr2->setRastr(rastrManipulation.rastr2);
 
     clearVectors();
@@ -265,7 +285,8 @@ void MainWindow::on_actionNew_clicked()
 // Triggers import of a rastr from a text file
 void MainWindow::on_actionImport_clicked()
 {
-    // TO DO CHECK FOR EXISTING RASTR AND SEE IF USER WANTS TO SAVE IT
+    if (rastrManipulation.rastr1 != NULL)
+        checkForSave();
 
     QString fileName = QFileDialog::getOpenFileName(this, tr("Импортировать"),
                                                     "", tr("Текстовый файл (*.txt);")); // Call for an "import" window
@@ -276,7 +297,8 @@ void MainWindow::on_actionImport_clicked()
 
     paintRastr1->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
                                rastrManipulation.iRastr, rastrManipulation.jRastr,rastrManipulation.jRastr, Qt::gray,
-                               rastrManipulation.iRastr, rastrManipulation.jRastr); // Set parameters for background rastr
+                               rastrManipulation.iRastr, rastrManipulation.jRastr, 0); // Set parameters for background rastr
+    paintRastr1->setBGColor(Qt::white);
     try {
         ui->customPlot1->show(); // Shows first graph on the main form
         ui->customPlot2->show();
@@ -364,13 +386,26 @@ void MainWindow::on_pushButtonStep_clicked()
 // Quits the program
 void MainWindow::on_actionQuit_triggered()
 {
-    // TO DO CHECK FOR SAVE
     if (NULL != rastrManipulation.rastr1)
+        checkForSave();
         rastrManipulation.deleteArray(rastrManipulation.iRastr);
     exit(0);
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_pushButtonColor_clicked()
 {
+    QColor checkColor = Qt::white;
+    if (checkColor == paintRastr1->getBGColor())
+    {
+        paintRastr1->setBGColor(Qt::black);
+        paintRastr1->setRastrColor(Qt::black,Qt::red);
+    }
+    else
+    {
+        paintRastr1->setBGColor(Qt::white);
+        paintRastr1->setRastrColor(Qt::gray,Qt::white);
+    }
 
+    paintRastr1->update();
+    paintRastr2->update();
 }
