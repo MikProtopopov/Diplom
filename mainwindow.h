@@ -67,6 +67,10 @@ private slots:
 
     void on_pushButtonColor_clicked();
 
+    void on_actionAbout_triggered();
+
+    void on_actionManual_triggered();
+
 private:
     Ui::MainWindow *ui;
     Dialog *dialog;
