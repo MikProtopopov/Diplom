@@ -220,3 +220,15 @@ int RastrManipulation::compareRastr(int stepHorisontal, int stepVertical)
 
     return countWindow;
 }
+
+int RastrManipulation::countWindows()
+{
+    if (NULL == rastr1)
+        return 0;
+    int countWindows = 0;
+    for (int i=0; i<iRastr;i++)
+        for (int j=0; j<jRastr; j++)
+            if (rastr1[i][j] == 0)
+                countWindows += 1;
+    return countWindows;
+}

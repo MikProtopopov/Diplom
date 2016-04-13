@@ -314,24 +314,43 @@ void MainWindow::on_actionImport_clicked()
 
     ui->pushButtonStart->setEnabled(1); // Enables "Start" button
 
+
+    // Set tick step for first graph
+    ui->customPlot1->xAxis->setAutoTickStep(false);
+    ui->customPlot1->xAxis->setTickStep(rastrManipulation.iRastr*2 / 6);
+    ui->customPlot1->yAxis->setAutoTickStep(false);
+    ui->customPlot1->yAxis->setTickStep((rastrManipulation.countWindows() + 2) / 6);
+
+    // Set tick step for second graph
+    ui->customPlot2->xAxis->setAutoTickStep(false);
+    ui->customPlot2->xAxis->setTickStep(rastrManipulation.iRastr*2 / 6);
+    ui->customPlot2->yAxis->setAutoTickStep(false);
+    ui->customPlot2->yAxis->setTickStep((rastrManipulation.countWindows() + 2) / 6);
+
+    // Set tick step for third graph
+    ui->customPlot3->xAxis->setAutoTickStep(false);
+    ui->customPlot3->xAxis->setTickStep(rastrManipulation.iRastr*2 / 6);
+    ui->customPlot3->yAxis->setAutoTickStep(false);
+    ui->customPlot3->yAxis->setTickStep((rastrManipulation.countWindows() + 2) / 6);
+
     // give the axes some labels:
-    ui->customPlot1->xAxis->setLabel("");
-    ui->customPlot1->yAxis->setLabel("");
+    ui->customPlot1->xAxis->setLabel("Шаг");
+    ui->customPlot1->yAxis->setLabel("Количество открытых окон");
     // set axes ranges, so we see all data:
     ui->customPlot1->xAxis->setRange(0, rastrManipulation.iRastr*2);
-    ui->customPlot1->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,1) + 2);
+    ui->customPlot1->yAxis->setRange(0, rastrManipulation.countWindows() + 2);
 
-    ui->customPlot2->xAxis->setLabel("");
-    ui->customPlot2->yAxis->setLabel("");
+    ui->customPlot2->xAxis->setLabel("Шаг");
+    ui->customPlot2->yAxis->setLabel("Количество открытых окон");
     // set axes ranges, so we see all data:
     ui->customPlot2->xAxis->setRange(0, rastrManipulation.iRastr*2);
-    ui->customPlot2->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,1) + 2);
+    ui->customPlot2->yAxis->setRange(0, rastrManipulation.countWindows() + 2);
 
-    ui->customPlot3->xAxis->setLabel("");
-    ui->customPlot3->yAxis->setLabel("");
+    ui->customPlot3->xAxis->setLabel("Шаг");
+    ui->customPlot3->yAxis->setLabel("Количество открытых окон");
     // set axes ranges, so we see all data:
     ui->customPlot3->xAxis->setRange(0, rastrManipulation.iRastr*2);
-    ui->customPlot3->yAxis->setRange(0, rastrManipulation.compareRastr(rastrManipulation.iRastr,1) + 2);
+    ui->customPlot3->yAxis->setRange(0, rastrManipulation.countWindows() + 2);
 
     errorHandling(drawGraph(ui->customPlot1)); // Draw line in graph 1
     if (1 == rastrManipulation.oscillation)
@@ -413,7 +432,11 @@ void MainWindow::on_pushButtonColor_clicked()
 void MainWindow::on_actionAbout_triggered()
 {
     QMessageBox::about(this, "О программе",
-                       "Эта программа является частью ВКР студента ВКИ Протопопова Михаила. \nВ нее входят модули библиотеки и визуализации растров.");
+                       "Функциональная библиотека и модуль визуализации для построения "
+                       "\nи контроля корректности автокорреляционных растровых структур. "
+                       "\nВерсия PreAlpha v1.0"
+                       "\n"
+                       "\nПротопопов Михаил, ВКИ НГУ 2016");
 }
 
 void MainWindow::on_actionManual_triggered()
