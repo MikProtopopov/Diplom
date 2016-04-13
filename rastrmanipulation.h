@@ -28,6 +28,7 @@ public:
     int fillRastr2(); // Function for filling moving rastr with consideration of "oscillation" value
     int compareRastr(int stepHorisontal, int stepVertical); // Function for counting the amount of open windows in rastr overlap
     int checkForSave(); // Function for asking user if they want to save current rastr, that is in memory
+    int countWindows();
 
     bool oscillation; // Oscillation on/off (1/0)
     int iRastr; //Number of lines in Rastr
