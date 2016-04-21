@@ -25,17 +25,18 @@ public:
     int importRastr(QString fileName); // Function of importing rastrs
     int exportRastr(QString fileName); // Function of exporting rastrs
     void deleteArray(int DeleteLines); // Delete craeted rastrs
-    int fillRastr2(); // Function for filling moving rastr with consideration of "oscillation" value
+
     int compareRastr(int stepHorisontal, int stepVertical); // Function for counting the amount of open windows in rastr overlap
+
+    int fillRastr2();   // Function for filling moving rastr with consideration of "oscillation" value
     int checkForSave(); // Function for asking user if they want to save current rastr, that is in memory
-    int countWindows();
+    int countWindows(); // Function for counting open windows in rastr overlap
 
     bool oscillation; // Oscillation on/off (1/0)
-    int iRastr; //Number of lines in Rastr
-    int jRastr; //Number of elements in lines of Rastr
-    int **rastr1; //main matrix, dynamic
-    int **rastr2; //copy of rastr1, for scanning
-
+    int iRastr;       // Number of lines in Rastr
+    int jRastr;       // Number of elements in lines of Rastr
+    int **rastr1;     // Main, background rastr
+    int **rastr2;     // Secondaty, moving rastr
 
     void createNewRastr(const int &xInt, const int &yInt);
 };

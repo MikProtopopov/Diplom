@@ -31,18 +31,21 @@ PaintRastr::PaintRastr(QWidget *parent) : QWidget(parent)
 void PaintRastr::setParameters(int height, int width, int axisX, int axisY, int step, QColor color,
                                int staticAxisX, int staticAxisY, int typeOfRastr)
 {
-    elemCountX = axisX; // Rastr's dimentions on X axis
-    elemCountY = axisY; // Rastr's dimentions on Y axis
-    staticX = staticAxisX;
-    staticY = staticAxisY;
-    cellHeight = (height - 2*indentSpace) / staticX; // Height of one cell of rastr
+    elemCountX = axisX;    // Rastr's dimentions on X axis
+    elemCountY = axisY;    // Rastr's dimentions on Y axis
+    staticX = staticAxisX; // Static variable for X axis
+    staticY = staticAxisY; // Static variable for Y axis
+
+    cellHeight = (height - 2*indentSpace) / staticX;   // Height of one cell of rastr
     cellWidth = (width / 3 - 2*indentSpace) / staticY; // Width of one cell of rastr
+
+    stepMov = step;          // Movement variable
+    rastrColor = color;      // Variable for the color of rastr
+    oStatus = 0;             // Oscillation status - top or bottom
+    rastrType = typeOfRastr; // Type of rastr - moving or background
+    cellColor = Qt::white;   // Color of cells for background rastr
+
     rastr = NULL; // Empty moving rastr
-    stepMov = step;
-    rastrColor = color;
-    oStatus = 0;
-    rastrType = typeOfRastr;
-    cellColor = Qt::white;
 }
 
 void PaintRastr::setBGColor(QColor color)

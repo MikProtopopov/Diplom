@@ -15,6 +15,7 @@
 
 #include "dialog.h"
 #include "ui_dialog.h"
+#include <QCloseEvent>
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
@@ -24,7 +25,9 @@ Dialog::Dialog(QWidget *parent) :
     ui->lineEdit->setText("0");
     startStep = -1;
 
-    connect(ui->pushButton,SIGNAL(clicked()),this,SLOT(close()));
+//    connect(ui->pushButton,SIGNAL(clicked()),this,SLOT(close()));
+
+    setResult(Rejected);
 }
 
 Dialog::~Dialog()
@@ -38,4 +41,7 @@ void Dialog::on_pushButton_clicked()
     mode = ui->comboBox->currentIndex();
     startStep = ui->lineEdit->text().toInt();
     setResult(Accepted);
+
+    Dialog::setVisible(0);
 }
+

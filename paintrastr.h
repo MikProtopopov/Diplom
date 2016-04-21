@@ -23,14 +23,20 @@ class PaintRastr : public QWidget
     Q_OBJECT
 public:
     explicit PaintRastr(QWidget *parent = 0);
-    void setParameters(int height, int width, int axisX, int axisY, int step, QColor color, int staticAxisX, int staticAxisY, int typeOfRastr); // Set parameters of graphs
+
+
+    void setParameters(int height, int width, int axisX, int axisY, int step, QColor color,
+                       int staticAxisX, int staticAxisY, int typeOfRastr); // Set parameters of graphs
+
     int ProcessX(int i); // Change virtual X coordinate into actual one
     int ProcessY(int j); // Change virtual Y coordinate into actual one
+
     void setRastr(int **&localRastr); // Set rastr, which will be painted by the widget
-    void setBGColor(QColor color);
-    void setRastrColor(QColor color0, QColor color1);
-    QColor getBGColor();
-    void drawBackground(QColor color);
+    void setBGColor(QColor color);    // Changes background color of draw area
+    QColor getBGColor();              // Returns current background color of draw area
+
+    void setRastrColor(QColor color0, QColor color1); // Changes color of background rastr
+
     int **rastr; // Rastr for painting
     int stepMov; // Step of movement
     int oStatus; // Counts the amount of vertical changes during oscillation
@@ -43,14 +49,14 @@ private:
     int elemCountX; // Amount of elements on one side of rastr
     int elemCountY; // Amount of elements on one side of rastr
     int cellHeight; // Height of one cell in rastr
-    int cellWidth; // Width of one cell
-    int staticX; // "Static" coordinate for X, for painting rastr while oscillation is on
-    int staticY; // "Static" coordinate for Y, for painting rastr while oscillation is on
-    int rastrType;
+    int cellWidth;  // Width of one cell
+    int staticX;    // "Static" coordinate for X, for painting rastr while oscillation is on
+    int staticY;    // "Static" coordinate for Y, for painting rastr while oscillation is on
+    int rastrType;  // Type of rastr - oscillated or non-oscillated
 
     QColor rastrColor; // Value for color, to distinguish between stationary and moving rastrs
-    QColor bgColor; // Value for color of the background for stationary rastr
-    QColor cellColor; // Color of cells of rastr
+    QColor bgColor;    // Value for color of the background for stationary rastr
+    QColor cellColor;  // Color of cells of rastr
 
 
 signals:
