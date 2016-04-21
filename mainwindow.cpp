@@ -101,7 +101,7 @@ MainWindow::~MainWindow()
 {
     paintRastr1->deleteLater(); // Clearing paintRastr1 from memory
     paintRastr2->deleteLater(); // Clearing paintRastr2 from memory
-    delete ui; // Clearing UI from memory
+    delete ui;                  // Clearing UI from memory
 }
 
 // Function for drawing lines on non-oscillated graph
@@ -187,22 +187,23 @@ int MainWindow::drawGraphOsci(QCustomPlot *customPlot)
     }
 
     customPlot->graph(0)->setData(graphXOsci,graphYOsci); // Sets point on the graph and connects it to the precious point
-    customPlot->replot(); // Refreshes the plot
+    customPlot->replot();                                 // Refreshes the plot
     return 0;
 }
 
 // Function for drawing lines on comparison graph
 int MainWindow::drawGraphCompare(QCustomPlot *customPlot)
 {
-    // Stop work if rastr, needed for work, does not exist
+    // Stop work if rastr, required for work, does not exist
     if (NULL == rastrManipulation.rastr1)
         return 0;
 
     try {
         graphXComp.append(paintRastr2->stepMov); // Add value to vector for horizontal coordinates
+        // Difference between rastrs
         graphYComp.append(
                     (abs(rastrManipulation.compareRastr(paintRastr2->stepMov,1) - rastrManipulation.compareRastr(paintRastr2->stepMov,0))
-                    + (rastrManipulation.compareRastr(paintRastr2->stepMov,1) - rastrManipulation.compareRastr(paintRastr2->stepMov,0))) / 2); // Difference between rastrs
+                    + (rastrManipulation.compareRastr(paintRastr2->stepMov,1) - rastrManipulation.compareRastr(paintRastr2->stepMov,0))) / 2);
     } catch(...){
         return 7;
     }
@@ -244,18 +245,20 @@ void MainWindow::errorHandling(int errorCode) // Takes an error code and matches
 // Triggers saving feature
 void MainWindow::on_actionSave_clicked()
 {
-
+    // TODOSave
 }
 
 // Triggers the start of rastr comparison
 void MainWindow::on_pushButtonStart_clicked()
 {
+    int rastr2Openwindows; // maximum open windows counter
 
-
-    if (QDialog::Accepted == dialog->exec())
+    dialog->exec();
+    if (QDialog::Accepted != dialog->result())
         return;
 
-   // TO DO CHECK HOW USER CLOSED THE WINDOW
+
+    // TODOCheck HOW USER CLOSED THE WINDOW
 
     paintRastr2->setBGColor(Qt::white);
     paintRastr2->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
@@ -263,16 +266,41 @@ void MainWindow::on_pushButtonStart_clicked()
                                rastrManipulation.iRastr, rastrManipulation.jRastr, 1); // Set parameters for moving rastr
     paintRastr2->setRastr(rastrManipulation.rastr2);
 
-    clearVectors();
+    clearVectors(); // Clearing vector for oscilated graph if not empty
 
-    // Clearing vector for oscilated graph if not empty
+    rastr2Openwindows = rastrManipulation.countWindows();
 
+    // Determining the "length" of ticks on Y axis
+    ui->customPlot1->yAxis->setTickStep((rastrManipulation.countWindows() + 2) / 6);
+    ui->customPlot2->yAxis->setTickStep((rastrManipulation.countWindows() + 2) / 6);
+    ui->customPlot3->yAxis->setTickStep((rastrManipulation.countWindows() + 2) / 6);
+
+    // Setting range of numbers for Y axis
+    ui->customPlot1->yAxis->setRange(0, rastrManipulation.countWindows() + 2);
+    ui->customPlot2->yAxis->setRange(0, rastrManipulation.countWindows() + 2);
+    ui->customPlot3->yAxis->setRange(0, rastrManipulation.countWindows() + 2);
+    try {
+        ui->customPlot1->show(); // Shows first graph on the main form
+        ui->customPlot2->show();
+        ui->customPlot3->show();
+    } catch (...) {
+        QMessageBox::information(this, tr("Ошибка"), tr("Сбой в построении графика."));
+        rastrManipulation.deleteArray(rastrManipulation.iRastr);
+        exit(0);
+    }
+
+    errorHandling(drawGraph(ui->customPlot1)); // Draw line in graph 1
+    if (1 == rastrManipulation.oscillation)
+    {
+        errorHandling(drawGraphOsci(ui->customPlot2)); // Draw line in graph 2
+        errorHandling(drawGraphCompare(ui->customPlot3)); // Draw line in graph 3
+    }
+
+    paintRastr2->show();
 
     ui->pushButtonStep->setEnabled(1);
 }
 
-// Triggers the window for creating of the new rastr
-// TO DO EVERYTHING
 void MainWindow::on_actionNew_clicked()
 {
     if ((rastrManipulation.rastr1)&&(rastrManipulation.checkForSave()))
@@ -299,65 +327,48 @@ void MainWindow::on_actionImport_clicked()
                                rastrManipulation.iRastr, rastrManipulation.jRastr,rastrManipulation.jRastr, Qt::gray,
                                rastrManipulation.iRastr, rastrManipulation.jRastr, 0); // Set parameters for background rastr
     paintRastr1->setBGColor(Qt::white);
-    try {
-        ui->customPlot1->show(); // Shows first graph on the main form
-        ui->customPlot2->show();
-        ui->customPlot3->show();
-    } catch (...) {
-        QMessageBox::information(this, tr("Ошибка"), tr("Сбой в построении графика."));
-        rastrManipulation.deleteArray(rastrManipulation.iRastr);
-        exit(0);
-    }
 
     errorHandling(rastrManipulation.fillRastr2()); // Fills second, moving rastr
     paintRastr1->setRastr(rastrManipulation.rastr1); // Sets matrix for background rastr
+    if (rastrManipulation.rastr2 != NULL)
+    {
+        paintRastr2->hide();
+    }
 
+    ui->pushButtonStep->setEnabled(0); // Disables "Step" button
     ui->pushButtonStart->setEnabled(1); // Enables "Start" button
 
 
-    // Set tick step for first graph
+    // Set tick length for first graph
     ui->customPlot1->xAxis->setAutoTickStep(false);
-    ui->customPlot1->xAxis->setTickStep(rastrManipulation.iRastr*2 / 6);
+    ui->customPlot1->xAxis->setTickStep(rastrManipulation.jRastr*2 / 6);
     ui->customPlot1->yAxis->setAutoTickStep(false);
-    ui->customPlot1->yAxis->setTickStep((rastrManipulation.countWindows() + 2) / 6);
 
-    // Set tick step for second graph
+    // Set tick length for second graph
     ui->customPlot2->xAxis->setAutoTickStep(false);
-    ui->customPlot2->xAxis->setTickStep(rastrManipulation.iRastr*2 / 6);
+    ui->customPlot2->xAxis->setTickStep(rastrManipulation.jRastr*2 / 6);
     ui->customPlot2->yAxis->setAutoTickStep(false);
-    ui->customPlot2->yAxis->setTickStep((rastrManipulation.countWindows() + 2) / 6);
 
-    // Set tick step for third graph
+    // Set tick length for third graph
     ui->customPlot3->xAxis->setAutoTickStep(false);
-    ui->customPlot3->xAxis->setTickStep(rastrManipulation.iRastr*2 / 6);
+    ui->customPlot3->xAxis->setTickStep(rastrManipulation.jRastr*2 / 6);
     ui->customPlot3->yAxis->setAutoTickStep(false);
-    ui->customPlot3->yAxis->setTickStep((rastrManipulation.countWindows() + 2) / 6);
 
     // give the axes some labels:
-    ui->customPlot1->xAxis->setLabel("Шаг");
+    ui->customPlot1->xAxis->setLabel("AcF");
     ui->customPlot1->yAxis->setLabel("Количество открытых окон");
     // set axes ranges, so we see all data:
-    ui->customPlot1->xAxis->setRange(0, rastrManipulation.iRastr*2);
-    ui->customPlot1->yAxis->setRange(0, rastrManipulation.countWindows() + 2);
+    ui->customPlot1->xAxis->setRange(0, rastrManipulation.jRastr*2);
 
-    ui->customPlot2->xAxis->setLabel("Шаг");
+    ui->customPlot2->xAxis->setLabel("AcF'");
     ui->customPlot2->yAxis->setLabel("Количество открытых окон");
     // set axes ranges, so we see all data:
-    ui->customPlot2->xAxis->setRange(0, rastrManipulation.iRastr*2);
-    ui->customPlot2->yAxis->setRange(0, rastrManipulation.countWindows() + 2);
+    ui->customPlot2->xAxis->setRange(0, rastrManipulation.jRastr*2);
 
-    ui->customPlot3->xAxis->setLabel("Шаг");
+    ui->customPlot3->xAxis->setLabel("AcF' - AcF");
     ui->customPlot3->yAxis->setLabel("Количество открытых окон");
     // set axes ranges, so we see all data:
-    ui->customPlot3->xAxis->setRange(0, rastrManipulation.iRastr*2);
-    ui->customPlot3->yAxis->setRange(0, rastrManipulation.countWindows() + 2);
-
-    errorHandling(drawGraph(ui->customPlot1)); // Draw line in graph 1
-    if (1 == rastrManipulation.oscillation)
-    {
-        errorHandling(drawGraphOsci(ui->customPlot2)); // Draw line in graph 2
-        errorHandling(drawGraphCompare(ui->customPlot3)); // Draw line in graph 3
-    }
+    ui->customPlot3->xAxis->setRange(0, rastrManipulation.jRastr*2);
 
     ui->actionExport->setEnabled(1);
 }
@@ -379,23 +390,23 @@ void MainWindow::on_pushButtonStep_clicked()
     if (1 == rastrManipulation.oscillation)
     {
         if ((paintRastr2->stepMov < rastrManipulation.jRastr * 2)&&(paintRastr2->stepMov == paintRastr2->oStatus))
-            paintRastr2->stepMov += 1;  // Do a step
+            paintRastr2->stepMov += 1;  // Representation of a Step
         else
             if (paintRastr2->oStatus < rastrManipulation.jRastr * 2)
-                paintRastr2->oStatus += 1;
+                paintRastr2->oStatus += 1; // Rastr's vertical position - uneven=TOP, even=BOTTOM
 
         if (0 == paintRastr2->oStatus % 2)
             errorHandling(drawGraph(ui->customPlot1)); // Draw line in graph 1
         else
         {
-            errorHandling(drawGraphOsci(ui->customPlot2)); // Draw line in graph 2
+            errorHandling(drawGraphOsci(ui->customPlot2));    // Draw line in graph 2
             errorHandling(drawGraphCompare(ui->customPlot3)); // Draw line in graph 3
         }
     }
     else
         if (paintRastr2->stepMov < rastrManipulation.jRastr * 2)
         {
-            paintRastr2->stepMov += 1;  // Do a step
+            paintRastr2->stepMov += 1;                 // Representation of a Step
             errorHandling(drawGraph(ui->customPlot1)); // Draw line in graph 1
         }
 

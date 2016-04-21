@@ -37,39 +37,38 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void errorHandling(int);
-    int drawGraph(QCustomPlot *customPlot); // Draw non-oscillated graph
-    int drawGraphOsci(QCustomPlot *customPlot); // Draw graph for oscillation
+    int drawGraph(QCustomPlot *customPlot);        // Draw non-oscillated graph
+    int drawGraphOsci(QCustomPlot *customPlot);    // Draw graph for oscillation
     int drawGraphCompare(QCustomPlot *customPlot); // Draw graph for comparison
-    void checkForSave();
-    RastrManipulation rastrManipulation; // Exemplar of RastrManipulation class
-    PaintRastr *paintRastr1; // Exemplar of PaintRastr class for moving rastr
-    PaintRastr *paintRastr2; // Exemplar of PaintRastr class for not moving rastr
+    void checkForSave();                           // Function that checks if user wants to save current matrix
 
-    QVector<double> graphX; // Vector for drawing of graph, for X axis
+    RastrManipulation rastrManipulation; // Exemplar of RastrManipulation class
+    PaintRastr *paintRastr1;             // Exemplar of PaintRastr class for moving rastr
+    PaintRastr *paintRastr2;             // Exemplar of PaintRastr class for not moving rastr
+
+    QVector<double> graphX;     // Vector for drawing of graph, for X axis
     QVector<double> graphXOsci; // Vector for drawing of graph, for X axis, for oscillated graph
     QVector<double> graphXComp; // Vector for drawing of graph, for X axis, for comparison graph
 
-    QVector<double> graphY; // Vector for drawing of graph, for Y axis, for non-oscillated graph
+    QVector<double> graphY;     // Vector for drawing of graph, for Y axis, for non-oscillated graph
     QVector<double> graphYOsci; // Vector for drawing of graph, for Y axis, for oscillated graph
     QVector<double> graphYComp; // Vector for drawing of graph, for Y axis, for comparison graph
 
 private slots:
     void clearVectors();
     void on_pushButtonStart_clicked(); // Action trigger for starting rastr movement
-    void on_actionExport_clicked(); // Action trigger for export
-    void on_actionImport_clicked(); // Action trigger for import
-    void on_actionNew_clicked(); // Action trigger for creating new rastr
+    void on_actionExport_clicked();    // Action trigger for export
+    void on_actionImport_clicked();    // Action trigger for import
+    void on_actionNew_clicked();       // Action trigger for creating new rastr
 
     void on_pushButtonStep_clicked(); // Action trigger for rastr movement
 
     void on_actionQuit_triggered(); // Action trigger for exit
 
+    void on_pushButtonColor_clicked(); // Action trigger for color change
 
-    void on_pushButtonColor_clicked();
-
-    void on_actionAbout_triggered();
-
-    void on_actionManual_triggered();
+    void on_actionAbout_triggered();  // Action trigger for About window
+    void on_actionManual_triggered(); // Action trigger for User Manula window
 
 private:
     Ui::MainWindow *ui;

@@ -85,8 +85,8 @@ int RastrManipulation::importRastr(QString fileName)
     if ((rastr1)&&(checkForSave())) // Delete array if exists
         deleteArray(iRastr);
 
-    QString readBufferString; // Read-string from file
-    QStringList readBufferInt; // String list for "conversion" to integer
+    QString readBufferString;          // Read-string from file
+    QStringList readBufferInt;         // String list for "conversion" to integer
     QTextStream inTextStream(&inFile); // Read stream of text
 
     int jRastrPrev = -1; //Number of elements in previous line
@@ -196,7 +196,7 @@ int RastrManipulation::fillRastr2()
 int RastrManipulation::compareRastr(int stepHorisontal, int stepVertical)
 {
     int countWindow = 0;
-    int columns = iRastr - abs(stepHorisontal - iRastr); // Number of columns
+    int columns = jRastr - abs(stepHorisontal - jRastr); // Number of columns
     int rows = jRastr - abs(stepVertical - jRastr); // Number of rows
 
     if (0 == oscillation)
@@ -208,9 +208,7 @@ int RastrManipulation::compareRastr(int stepHorisontal, int stepVertical)
         for (int i=0; i<iRastr - 1; i++)
             for (int j=0; j<columns; j++)
             {
-//                countWindow += rastr2[i][(abs(jRastr - stepHorisontal) + (jRastr - stepHorisontal))/2] * rastr1[i + stepVertical][(abs(stepHorisontal - jRastr) + (stepHorisontal - jRastr))/2];
-
-                if (stepHorisontal <= jRastr)
+                if (stepHorisontal < jRastr)
                     countWindow += rastr2[i][jRastr - columns + j] * rastr1[i + stepVertical][j];
                 else
                     countWindow += rastr2[i][j] * rastr1[i + stepVertical][jRastr - columns + j];
@@ -223,12 +221,12 @@ int RastrManipulation::compareRastr(int stepHorisontal, int stepVertical)
 
 int RastrManipulation::countWindows()
 {
-    if (NULL == rastr1)
+    if (NULL == rastr2)
         return 0;
     int countWindows = 0;
-    for (int i=0; i<iRastr;i++)
+
+    for (int i=0; i<iRastr-oscillation; i++)
         for (int j=0; j<jRastr; j++)
-            if (rastr1[i][j] == 0)
-                countWindows += 1;
+            countWindows += rastr2[i][j];
     return countWindows;
 }
