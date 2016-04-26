@@ -41,6 +41,7 @@ public:
     int jRastr;       // Number of elements in lines of Rastr
     uint8_t **rastr1;     // Main, background rastr
     uint8_t **rastr2;     // Secondaty, moving rastr
+    uint8_t *rastrBuffer;     // Secondaty, moving rastr
 
     void createNewRastr(const int &xInt, const int &yInt);
 };
