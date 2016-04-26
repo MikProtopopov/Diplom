@@ -31,7 +31,7 @@
   </widget>
   <widget class="QLineEdit" name="lineEdit">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>
@@ -40,6 +40,9 @@
      <width>113</width>
      <height>20</height>
     </rect>
+   </property>
+   <property name="text">
+    <string>0</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -57,7 +60,7 @@
   </widget>
   <widget class="QComboBox" name="comboBox">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>
@@ -93,7 +96,7 @@
   </widget>
   <widget class="QComboBox" name="comboBox_2">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>

@@ -45,6 +45,12 @@ int RastrManipulation::checkForSave()
     return 0;
 }
 
+// Set oscillation value
+void RastrManipulation::setOscillation(int osci)
+{
+    oscillation = osci;
+}
+
 // Create new rastr with accepted parameters
 void RastrManipulation::createNewRastr(const int &xInt, const int &yInt)
 {

@@ -45,3 +45,8 @@ void Dialog::on_pushButton_clicked()
     Dialog::setVisible(0);
 }
 
+void Dialog::setMode(int m)
+{
+    mode = m;
+}
+

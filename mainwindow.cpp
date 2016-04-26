@@ -257,8 +257,11 @@ void MainWindow::on_pushButtonStart_clicked()
     if (QDialog::Accepted != dialog->result())
         return;
 
-
     // TODOCheck HOW USER CLOSED THE WINDOW
+
+    rastrManipulation.setOscillation(dialog->oscillation);
+
+    errorHandling(rastrManipulation.fillRastr2()); // Fills second, moving rastr
 
     paintRastr2->setBGColor(Qt::white);
     paintRastr2->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
@@ -289,6 +292,8 @@ void MainWindow::on_pushButtonStart_clicked()
         exit(0);
     }
 
+
+
     errorHandling(drawGraph(ui->customPlot1)); // Draw line in graph 1
     if (1 == rastrManipulation.oscillation)
     {
@@ -299,6 +304,20 @@ void MainWindow::on_pushButtonStart_clicked()
     paintRastr2->show();
 
     ui->pushButtonStep->setEnabled(1);
+
+    if ((0 < dialog->startStep)&&(1 == dialog->mode))
+    {
+        dialog->setMode(0);
+        for (int i=0; i < dialog->startStep; i++)
+            ui->pushButtonStep->click();
+        dialog->setMode(1);
+    }
+
+    if ((0 < dialog->startStep)&&(0 == dialog->mode))
+    {
+        for (int i=0; i < dialog->startStep; i++)
+            ui->pushButtonStep->click();
+    }
 }
 
 void MainWindow::on_actionNew_clicked()
@@ -328,7 +347,7 @@ void MainWindow::on_actionImport_clicked()
                                rastrManipulation.iRastr, rastrManipulation.jRastr, 0); // Set parameters for background rastr
     paintRastr1->setBGColor(Qt::white);
 
-    errorHandling(rastrManipulation.fillRastr2()); // Fills second, moving rastr
+
     paintRastr1->setRastr(rastrManipulation.rastr1); // Sets matrix for background rastr
     if (rastrManipulation.rastr2 != NULL)
     {
@@ -387,7 +406,31 @@ void MainWindow::on_actionExport_clicked()
 // Triggers movement of the moving rastr
 void MainWindow::on_pushButtonStep_clicked()
 {
-    if (1 == rastrManipulation.oscillation)
+    // Automatic mode with oscillation
+    if ((1 == rastrManipulation.oscillation)&&(1 == dialog->mode))
+    {
+        for (int i=0; i<rastrManipulation.jRastr * 4; i++)
+        {
+            if ((paintRastr2->stepMov < rastrManipulation.jRastr * 2)&&(paintRastr2->stepMov == paintRastr2->oStatus))
+                paintRastr2->stepMov += 1;  // Representation of a Step
+            else
+                if (paintRastr2->oStatus < rastrManipulation.jRastr * 2)
+                    paintRastr2->oStatus += 1; // Rastr's vertical position - uneven=TOP, even=BOTTOM
+
+            if (0 == paintRastr2->oStatus % 2)
+                errorHandling(drawGraph(ui->customPlot1)); // Draw line in graph 1
+            else
+            {
+                errorHandling(drawGraphOsci(ui->customPlot2));    // Draw line in graph 2
+                errorHandling(drawGraphCompare(ui->customPlot3)); // Draw line in graph 3
+            }
+            paintRastr2->update(); // Update painted rastr with new coordinates
+            Sleep(100);
+        }
+    }
+
+    // Manual mode with oscillation
+    if ((1 == rastrManipulation.oscillation)&&(0 == dialog->mode))
     {
         if ((paintRastr2->stepMov < rastrManipulation.jRastr * 2)&&(paintRastr2->stepMov == paintRastr2->oStatus))
             paintRastr2->stepMov += 1;  // Representation of a Step
@@ -402,15 +445,34 @@ void MainWindow::on_pushButtonStep_clicked()
             errorHandling(drawGraphOsci(ui->customPlot2));    // Draw line in graph 2
             errorHandling(drawGraphCompare(ui->customPlot3)); // Draw line in graph 3
         }
+        paintRastr2->update(); // Update painted rastr with new coordinates
     }
-    else
+
+    // Automatic mode without oscillation
+    if ((0 == rastrManipulation.oscillation)&&(1 == dialog->mode))
+    {
+        for (int i=0; i<rastrManipulation.jRastr * 2; i++)
+        {
+            if (paintRastr2->stepMov < rastrManipulation.jRastr * 2)
+            {
+                paintRastr2->stepMov += 1;                 // Representation of a Step
+                errorHandling(drawGraph(ui->customPlot1)); // Draw line in graph 1
+            }
+            paintRastr2->update(); // Update painted rastr with new coordinates
+            Sleep(100);
+        }
+    }
+
+    // Manual mode without oscillation
+    if ((0 == rastrManipulation.oscillation)&&(0 == dialog->mode))
+    {
         if (paintRastr2->stepMov < rastrManipulation.jRastr * 2)
         {
             paintRastr2->stepMov += 1;                 // Representation of a Step
             errorHandling(drawGraph(ui->customPlot1)); // Draw line in graph 1
         }
-
-    paintRastr2->update(); // Update painted rastr with new coordinates
+        paintRastr2->update(); // Update painted rastr with new coordinates
+    }
 }
 
 // Quits the program
