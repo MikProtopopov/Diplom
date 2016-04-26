@@ -60,9 +60,9 @@ void RastrManipulation::createNewRastr(const int &xInt, const int &yInt)
     if ((rastr1)&&(checkForSave()))
         deleteArray(iRastr);
 
-    rastr1 = new int*[iRastr];
+    rastr1 = new uint8_t*[iRastr];
     for (int i=0; i<iRastr; i++)
-        rastr1[i] = new int[jRastr];
+        rastr1[i] = new uint8_t[jRastr];
 }
 
 // Delete existing array
@@ -114,7 +114,7 @@ int RastrManipulation::importRastr(QString fileName)
     }
 
     //Creating new array
-    rastr1 = new int*[iRastr];
+    rastr1 = new uint8_t*[iRastr];
 
     //Counting the number of elements in the lines, checking for validity
     inTextStream.seek(0);
@@ -136,7 +136,7 @@ int RastrManipulation::importRastr(QString fileName)
             return 4;
         }
 
-        rastr1[i] = new int[jRastr];
+        rastr1[i] = new uint8_t[jRastr];
 
         jRastrPrev = jRastr;
 
@@ -180,6 +180,41 @@ int RastrManipulation::exportRastr(QString fileName)
     return 0;
 }
 
+int RastrManipulation::saveRastr(QString fileName)
+{
+    if (fileName.isEmpty())
+        return 1;
+    else
+    {
+        QFile file(fileName); // File for export
+        file.open(QIODevice::WriteOnly);
+        QDataStream out(&file); // Data stream for export
+        out << iRastr;
+        file.close();
+    }
+    return 0;
+}
+
+char RastrManipulation::loadRastr(QString fileName)
+{
+    if (fileName.isEmpty())
+        return 1;
+    QFile inFile(fileName); //File for import
+
+    if (!inFile.open(QIODevice::ReadOnly)) // Viability check - can program open file?
+    {
+        return 2;
+    }
+
+    QDataStream inDataStream(&inFile); // Read stream of text
+
+    char buffer;
+    inDataStream.readRawData(&buffer,1);
+
+    inFile.close();
+    return buffer;
+}
+
 int RastrManipulation::fillRastr2()
 {
         if (0 == oscillation)
@@ -187,7 +222,7 @@ int RastrManipulation::fillRastr2()
         if (1 == oscillation)
         {
             try {
-            rastr2 = new int*[iRastr - 1];
+            rastr2 = new uint8_t*[iRastr - 1];
             for (int i=0; i<iRastr - 1; i++)
                 rastr2[i] = rastr1[i+1];
             } catch (...) {

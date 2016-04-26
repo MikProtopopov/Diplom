@@ -17,6 +17,7 @@
 #define RASTRMANIPULATION_H
 
 #include <QMainWindow>
+#include <stdint.h>
 
 class RastrManipulation
 {
@@ -24,6 +25,8 @@ public:
     RastrManipulation();
     int importRastr(QString fileName); // Function of importing rastrs
     int exportRastr(QString fileName); // Function of exporting rastrs
+    int saveRastr(QString fileName);   // Function of saving rastrs
+    char loadRastr(QString fileName);   // Function of loading rastrs
     void deleteArray(int DeleteLines); // Delete craeted rastrs
 
     int compareRastr(int stepHorisontal, int stepVertical); // Function for counting the amount of open windows in rastr overlap
@@ -36,8 +39,8 @@ public:
     bool oscillation; // Oscillation on/off (1/0)
     int iRastr;       // Number of lines in Rastr
     int jRastr;       // Number of elements in lines of Rastr
-    int **rastr1;     // Main, background rastr
-    int **rastr2;     // Secondaty, moving rastr
+    uint8_t **rastr1;     // Main, background rastr
+    uint8_t **rastr2;     // Secondaty, moving rastr
 
     void createNewRastr(const int &xInt, const int &yInt);
 };
