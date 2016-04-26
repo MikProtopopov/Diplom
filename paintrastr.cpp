@@ -116,7 +116,7 @@ void PaintRastr::paintEvent(QPaintEvent *)
 }
 
 // Set moving rastr
-void PaintRastr::setRastr(int **&localRastr)
+void PaintRastr::setRastr(uint8_t **&localRastr)
 {
     rastr = localRastr;
 }

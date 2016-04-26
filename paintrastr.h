@@ -17,6 +17,7 @@
 #define PAINTRASTR_H
 
 #include <QWidget>
+#include <stdint.h>
 
 class PaintRastr : public QWidget
 {
@@ -31,13 +32,13 @@ public:
     int ProcessX(int i); // Change virtual X coordinate into actual one
     int ProcessY(int j); // Change virtual Y coordinate into actual one
 
-    void setRastr(int **&localRastr); // Set rastr, which will be painted by the widget
+    void setRastr(uint8_t **&localRastr); // Set rastr, which will be painted by the widget
     void setBGColor(QColor color);    // Changes background color of draw area
     QColor getBGColor();              // Returns current background color of draw area
 
     void setRastrColor(QColor color0, QColor color1); // Changes color of background rastr
 
-    int **rastr; // Rastr for painting
+    uint8_t **rastr; // Rastr for painting
     int stepMov; // Step of movement
     int oStatus; // Counts the amount of vertical changes during oscillation
 

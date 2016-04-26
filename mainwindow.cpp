@@ -242,11 +242,7 @@ void MainWindow::errorHandling(int errorCode) // Takes an error code and matches
     }
 }
 
-// Triggers saving feature
-void MainWindow::on_actionSave_clicked()
-{
-    // TODOSave
-}
+
 
 // Triggers the start of rastr comparison
 void MainWindow::on_pushButtonStart_clicked()
@@ -519,4 +515,26 @@ void MainWindow::on_actionManual_triggered()
                        "\nДалее пользователь должен выбрать нужный ему файл с растровой матрицей."
                        "\nДалее, после того, как на экране появится серый растр, необходимо нажать кнопку Начать, и в открывшемся окне нажать кнопку Запуск."
                        "\nПосле этого кнопка >> станет доступной, и по нажатии на нее черный растр начнет двигаться вправо, а графики в нижней части экрана начнут заполняться данными.");
+}
+
+// Triggers saving feature
+void MainWindow::on_actionSave_triggered()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Сохранить"),
+                                                    "", tr("Текстовый файл (*.txt);;Все файлы(*)")); // Call for an "save" window
+    if (fileName.isEmpty())
+        return;
+
+    errorHandling(rastrManipulation.saveRastr(fileName));
+}
+
+void MainWindow::on_actionLoad_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Загрузить"),
+                                                    "", tr("Текстовый файл (*.txt);")); // Call for an "import" window
+    if (fileName.isEmpty())
+        return;
+
+    ui->label_2->setText((QString)rastrManipulation.loadRastr(fileName));
+
 }

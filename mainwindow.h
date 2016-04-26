@@ -70,6 +70,10 @@ private slots:
     void on_actionAbout_triggered();  // Action trigger for About window
     void on_actionManual_triggered(); // Action trigger for User Manula window
 
+    void on_actionSave_triggered();
+
+    void on_actionLoad_triggered();
+
 private:
     Ui::MainWindow *ui;
     Dialog *dialog;
