@@ -478,6 +478,7 @@ void MainWindow::on_actionQuit_triggered()
         checkForSave();
         rastrManipulation.deleteArray(rastrManipulation.iRastr);
     exit(0);
+    // TODO don't quit if cancelled
 }
 
 void MainWindow::on_pushButtonColor_clicked()
@@ -535,6 +536,6 @@ void MainWindow::on_actionLoad_triggered()
     if (fileName.isEmpty())
         return;
 
-    ui->label_2->setText((QString)rastrManipulation.loadRastr(fileName));
+     errorHandling(rastrManipulation.loadRastr(fileName));
 
 }

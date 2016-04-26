@@ -17,6 +17,7 @@
 #include <malloc.h>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 #include <QFileDialog>
 #include <QTextStream>
 #include <QDataStream>
@@ -189,7 +190,11 @@ int RastrManipulation::saveRastr(QString fileName)
         QFile file(fileName); // File for export
         file.open(QIODevice::WriteOnly);
         QDataStream out(&file); // Data stream for export
-        out << iRastr;
+        out.writeRawData((char*)&iRastr,sizeof(iRastr));
+        out.writeRawData((char*)&jRastr,sizeof(jRastr));
+
+        for (int i=0; i<iRastr; i++)
+            out.writeRawData((char*)&rastr1[i], sizeof(uint8_t)*jRastr);
         file.close();
     }
     return 0;
@@ -197,6 +202,11 @@ int RastrManipulation::saveRastr(QString fileName)
 
 char RastrManipulation::loadRastr(QString fileName)
 {
+
+    // TODO check for size - выписать размерности, перемножить, сравнить
+    // TODO check for save
+    // TODO clear memory from rastr1 and rastr2
+
     if (fileName.isEmpty())
         return 1;
     QFile inFile(fileName); //File for import
@@ -208,11 +218,25 @@ char RastrManipulation::loadRastr(QString fileName)
 
     QDataStream inDataStream(&inFile); // Read stream of text
 
-    char buffer;
-    inDataStream.readRawData(&buffer,1);
+    inDataStream.readRawData((char*)&iRastr,sizeof(iRastr));
+    inDataStream.readRawData((char*)&jRastr,sizeof(jRastr));
+
+    rastrBuffer = new uint8_t[iRastr * jRastr];
+    inDataStream.readRawData((char*)&rastrBuffer,sizeof(uint8_t)* iRastr * jRastr);
+
+    rastr1 = new uint8_t*[iRastr];
+
+    for (int i=0; i<iRastr; i++)
+    {
+        rastr1[i] = new uint8_t[jRastr];
+        std::copy_n(rastrBuffer,jRastr,rastr1[i]); // INCORRECT
+    }
+
+
 
     inFile.close();
-    return buffer;
+    delete rastrBuffer;
+    return 0;
 }
 
 int RastrManipulation::fillRastr2()
