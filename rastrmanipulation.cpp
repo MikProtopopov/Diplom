@@ -181,6 +181,7 @@ int RastrManipulation::exportRastr(QString fileName)
     return 0;
 }
 
+// Save rastr into a binary file
 int RastrManipulation::saveRastr(QString fileName)
 {
     if (fileName.isEmpty())
@@ -194,7 +195,7 @@ int RastrManipulation::saveRastr(QString fileName)
         out.writeRawData((char*)&jRastr,sizeof(jRastr));
 
         for (int i=0; i<iRastr; i++)
-            out.writeRawData((char*)&rastr1[i], sizeof(uint8_t)*jRastr);
+            out.writeRawData((char*)rastr1[i], sizeof(uint8_t)*jRastr);
         file.close();
     }
     return 0;
@@ -204,8 +205,6 @@ char RastrManipulation::loadRastr(QString fileName)
 {
 
     // TODO check for size - выписать размерности, перемножить, сравнить
-    // TODO check for save
-    // TODO clear memory from rastr1 and rastr2
 
     if (fileName.isEmpty())
         return 1;
@@ -216,24 +215,31 @@ char RastrManipulation::loadRastr(QString fileName)
         return 2;
     }
 
+    if ((rastr1)&&(checkForSave())) // Delete array if exists
+        deleteArray(iRastr);
+
     QDataStream inDataStream(&inFile); // Read stream of text
 
     inDataStream.readRawData((char*)&iRastr,sizeof(iRastr));
     inDataStream.readRawData((char*)&jRastr,sizeof(jRastr));
 
+    //Checking validity of the file
+    if (iRastr * jRastr < 9)
+    {
+        inFile.close();
+        return 3;
+    }
+
     rastrBuffer = new uint8_t[iRastr * jRastr];
-    inDataStream.readRawData((char*)&rastrBuffer,sizeof(uint8_t)* iRastr * jRastr);
+    inDataStream.readRawData((char*)rastrBuffer,sizeof(uint8_t)* iRastr * jRastr);
 
     rastr1 = new uint8_t*[iRastr];
 
     for (int i=0; i<iRastr; i++)
     {
         rastr1[i] = new uint8_t[jRastr];
-        std::copy_n(rastrBuffer,jRastr,rastr1[i]); // INCORRECT
+        memmove(rastr1[i],rastrBuffer + i*jRastr,jRastr);
     }
-
-
-
     inFile.close();
     delete rastrBuffer;
     return 0;

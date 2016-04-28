@@ -522,20 +522,72 @@ void MainWindow::on_actionManual_triggered()
 void MainWindow::on_actionSave_triggered()
 {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Сохранить"),
-                                                    "", tr("Текстовый файл (*.txt);;Все файлы(*)")); // Call for an "save" window
+                                                    "", tr("Растровый файл (*.rastr);;Все файлы(*)")); // Call for an "save" window
     if (fileName.isEmpty())
         return;
 
     errorHandling(rastrManipulation.saveRastr(fileName));
 }
 
+// Triggers loading of a rastr from binary file
 void MainWindow::on_actionLoad_triggered()
 {
+    if (rastrManipulation.rastr1 != NULL)
+        checkForSave();
+
     QString fileName = QFileDialog::getOpenFileName(this, tr("Загрузить"),
-                                                    "", tr("Текстовый файл (*.txt);")); // Call for an "import" window
+                                                    "", tr("Растровый файл (*.rastr);")); // Call for an "import" window
     if (fileName.isEmpty())
         return;
 
      errorHandling(rastrManipulation.loadRastr(fileName));
 
+     paintRastr1->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
+                                rastrManipulation.iRastr, rastrManipulation.jRastr,rastrManipulation.jRastr, Qt::gray,
+                                rastrManipulation.iRastr, rastrManipulation.jRastr, 0); // Set parameters for background rastr
+     paintRastr1->setBGColor(Qt::white);
+
+
+     paintRastr1->setRastr(rastrManipulation.rastr1); // Sets matrix for background rastr
+     if (rastrManipulation.rastr2 != NULL)
+     {
+         paintRastr2->hide();
+     }
+
+     ui->pushButtonStep->setEnabled(0); // Disables "Step" button
+     ui->pushButtonStart->setEnabled(1); // Enables "Start" button
+
+
+     // Set tick length for first graph
+     ui->customPlot1->xAxis->setAutoTickStep(false);
+     ui->customPlot1->xAxis->setTickStep(rastrManipulation.jRastr*2 / 6);
+     ui->customPlot1->yAxis->setAutoTickStep(false);
+
+     // Set tick length for second graph
+     ui->customPlot2->xAxis->setAutoTickStep(false);
+     ui->customPlot2->xAxis->setTickStep(rastrManipulation.jRastr*2 / 6);
+     ui->customPlot2->yAxis->setAutoTickStep(false);
+
+     // Set tick length for third graph
+     ui->customPlot3->xAxis->setAutoTickStep(false);
+     ui->customPlot3->xAxis->setTickStep(rastrManipulation.jRastr*2 / 6);
+     ui->customPlot3->yAxis->setAutoTickStep(false);
+
+     // give the axes some labels:
+     ui->customPlot1->xAxis->setLabel("AcF");
+     ui->customPlot1->yAxis->setLabel("Количество открытых окон");
+     // set axes ranges, so we see all data:
+     ui->customPlot1->xAxis->setRange(0, rastrManipulation.jRastr*2);
+
+     ui->customPlot2->xAxis->setLabel("AcF'");
+     ui->customPlot2->yAxis->setLabel("Количество открытых окон");
+     // set axes ranges, so we see all data:
+     ui->customPlot2->xAxis->setRange(0, rastrManipulation.jRastr*2);
+
+     ui->customPlot3->xAxis->setLabel("AcF' - AcF");
+     ui->customPlot3->yAxis->setLabel("Количество открытых окон");
+     // set axes ranges, so we see all data:
+     ui->customPlot3->xAxis->setRange(0, rastrManipulation.jRastr*2);
+
+     ui->actionExport->setEnabled(1);
 }
