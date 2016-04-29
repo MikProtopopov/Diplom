@@ -42,6 +42,8 @@ public:
     int drawGraphCompare(QCustomPlot *customPlot); // Draw graph for comparison
     void checkForSave();                           // Function that checks if user wants to save current matrix
 
+    void resizeEvent(QResizeEvent * event);
+
     RastrManipulation rastrManipulation; // Exemplar of RastrManipulation class
     PaintRastr *paintRastr1;             // Exemplar of PaintRastr class for moving rastr
     PaintRastr *paintRastr2;             // Exemplar of PaintRastr class for not moving rastr
