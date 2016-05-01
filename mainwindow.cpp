@@ -104,46 +104,61 @@ MainWindow::~MainWindow()
     delete ui;                  // Clearing UI from memory
 }
 
+// For resize handling
 void MainWindow::resizeEvent(QResizeEvent * event)
 {
     QMainWindow::resizeEvent(event);
     int margin = 10;
-    int anchor1 = (this->height()-20) / 2.2;
-    int anchor2 = this->height() - anchor1 - margin*3 - ui->pushButtonStart->height() - margin*5;
-    int anchor3 = (this->width()-margin*4) / 3;
+    int anchor1 = (this->height()-20) / 2.2;     // Height of the draw area for rastr
+    int anchor2 = this->height() - anchor1 - margin*3 - ui->pushButtonStart->height() - margin*5; // Height of the draw area for graphs
+    int anchor3 = (this->width()- margin*4) / 3; // Width of the draw areas for graphs
 
     ui->graphicsView_1->resize(this->width()-20, anchor1); // Top window resize
 
+    // Rastr draw areas resize
+    ui->verticalLayoutWidget->resize(this->width()-20, anchor1);
+    ui->verticalLayoutWidget_2->resize(this->width()-20, anchor1);
+
+    // Update of the size of the window
+    paintRastr1->setSize(this->height(), this->width());
+    paintRastr2->setSize(this->height(), this->width());
+
+    // Refresh the rastr drawings
+    paintRastr1->update();
+    paintRastr2->update();
+    ui->verticalLayoutWidget->update();
+    ui->verticalLayoutWidget_2->update();
+
+    // Resize the leftmost graph draw area
     ui->graphicsView_2->move(margin, margin + anchor1 + margin + ui->pushButtonStart->height() + margin);
     ui->graphicsView_2->resize(anchor3, anchor2);
 
+    // Resize the middle graph draw area
     ui->graphicsView_3->move(margin + anchor3 + margin, margin + anchor1 + margin + ui->pushButtonStart->height() + margin);
     ui->graphicsView_3->resize(anchor3, anchor2);
 
+    // Resize the rightmost graph draw area
     ui->graphicsView_4->move(margin + anchor3*2 + margin*2, margin + anchor1 + margin + ui->pushButtonStart->height() + margin);
     ui->graphicsView_4->resize(anchor3, anchor2);
 
+    // Resize the leftmost graph draw area
     ui->customPlot1->move(margin, margin + anchor1 + margin + ui->pushButtonStart->height() + margin);
     ui->customPlot1->resize(anchor3, anchor2);
 
+    // Resize the middle graph draw area
     ui->customPlot2->move(margin + anchor3 + margin, margin + anchor1 + margin + ui->pushButtonStart->height() + margin);
     ui->customPlot2->resize(anchor3, anchor2);
 
+    // Resize the rightmost graph draw area
     ui->customPlot3->move(margin + anchor3*2 + margin*2, margin + anchor1 + margin + ui->pushButtonStart->height() + margin);
     ui->customPlot3->resize(anchor3, anchor2);
 
+    // Movement of buttons
     ui->pushButtonStart->move(margin, margin + anchor1 + margin);
     ui->pushButtonStep->move(margin + ui->pushButtonStart->width() + margin, margin + anchor1 + margin);
     ui->pushButtonColor->move(this->width() - margin - ui->pushButtonColor->width(), margin + anchor1 + margin);
 
     ui->customPlot1->move(margin, margin + anchor1 + margin + ui->pushButtonStart->height() + margin);
-
-    paintRastr1->update();
-    paintRastr2->update();
-
-
-
-    // TODO draw area for rastrs - resize + position + no idea how to do it as the verticalLayout thing does not have height, width and resize function
 }
 
 // Function for drawing lines on non-oscillated graph

@@ -157,6 +157,7 @@
       <height>231</height>
      </rect>
     </property>
+    <zorder>widget</zorder>
    </widget>
    <widget class="QCustomPlot" name="customPlot2" native="true">
     <property name="geometry">

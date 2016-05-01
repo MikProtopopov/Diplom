@@ -35,9 +35,8 @@ void PaintRastr::setParameters(int height, int width, int axisX, int axisY, int 
     elemCountY = axisY;    // Rastr's dimentions on Y axis
     staticX = staticAxisX; // Static variable for X axis
     staticY = staticAxisY; // Static variable for Y axis
-
-    cellHeight = (height - 2*indentSpace) / staticX;   // Height of one cell of rastr
-    cellWidth = (width / 3 - 2*indentSpace) / staticY; // Width of one cell of rastr
+    sizeHeight = height;   // Set the height of the draw area
+    sizeWidth = width;     // Set the width of the draw area
 
     stepMov = step;          // Movement variable
     rastrColor = color;      // Variable for the color of rastr
@@ -46,6 +45,12 @@ void PaintRastr::setParameters(int height, int width, int axisX, int axisY, int 
     cellColor = Qt::white;   // Color of cells for background rastr
 
     rastr = NULL; // Empty moving rastr
+}
+
+void PaintRastr::setSize(int height, int width)
+{
+    sizeHeight = height;
+    sizeWidth = width;
 }
 
 void PaintRastr::setBGColor(QColor color)
@@ -69,14 +74,14 @@ void PaintRastr::setRastrColor(QColor color0, QColor color1)
 // Procces coordinate on X axis
 int PaintRastr::ProcessX(int i)
 {
-   return indentSpace + i*cellHeight;
+   return indentSpace + i*cellWidth;
 
 }
 
 // Procces coordinate on Y axis
 int PaintRastr::ProcessY(int j)
 {
-   return indentSpace + (j + abs(staticX-elemCountX))*cellWidth - (oStatus % 2)*cellWidth;
+   return indentSpace + (j + abs(staticX-elemCountX))*cellHeight - (oStatus % 2)*cellHeight;
 }
 
 // Drawing
@@ -89,9 +94,12 @@ void PaintRastr::paintEvent(QPaintEvent *)
     {
         QPainter bg(this);
         bg.setPen(QPen(bgColor,1,Qt::SolidLine));
-        QRect bgRect = QRect(0,0, 780, 270); // CHANGE 780 and 270 FOR ACTUAL VARIABLES WITH H/W OF GRAPHICSVIEW_1
+        QRect bgRect = QRect(0,0, sizeWidth, sizeHeight);
         bg.fillRect(bgRect,QColor(bgColor));
     }
+
+    cellWidth = (sizeWidth / 3 - 2*10) / staticY; // Width of one cell of rastr
+    cellHeight = (sizeHeight - 2*10) / staticX;   // Height of one cell of rastr
 
     QPainter main(this);
     main.setPen(QPen(rastrColor,1,Qt::SolidLine));
@@ -101,18 +109,18 @@ void PaintRastr::paintEvent(QPaintEvent *)
         {
             if (0 == rastr[j][i])
             {
-                QRect rect = QRect(ProcessX(i + stepMov),ProcessY(j),cellHeight,
-                               cellWidth); // Draw rectangle
+                QRect rect = QRect(ProcessX(i + stepMov),ProcessY(j),cellWidth,
+                               cellHeight); // Draw rectangle
                 main.fillRect(rect,QColor(rastrColor)); // Fill rectangle
             }
             if ((1 == rastr[j][i]) && (0 == rastrType))
             {
-                QRect rect = QRect(ProcessX(i + stepMov),ProcessY(j),cellHeight,
-                               cellWidth); // Draw rectangle
+                QRect rect = QRect(ProcessX(i + stepMov),ProcessY(j),cellWidth,
+                               cellHeight); // Draw rectangle
                 main.fillRect(rect,QColor(cellColor)); // Fill rectangle
             }
         }
-    main.drawRect(ProcessX(stepMov),ProcessY(0),cellHeight*elemCountY,cellWidth*elemCountX);
+    main.drawRect(ProcessX(stepMov),ProcessY(0),cellWidth*elemCountY,cellHeight*elemCountX);
 }
 
 // Set moving rastr

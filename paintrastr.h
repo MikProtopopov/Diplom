@@ -29,6 +29,8 @@ public:
     void setParameters(int height, int width, int axisX, int axisY, int step, QColor color,
                        int staticAxisX, int staticAxisY, int typeOfRastr); // Set parameters of graphs
 
+    void setSize(int height, int width); // Set size of the draw area
+
     int ProcessX(int i); // Change virtual X coordinate into actual one
     int ProcessY(int j); // Change virtual Y coordinate into actual one
 
@@ -54,6 +56,8 @@ private:
     int staticX;    // "Static" coordinate for X, for painting rastr while oscillation is on
     int staticY;    // "Static" coordinate for Y, for painting rastr while oscillation is on
     int rastrType;  // Type of rastr - oscillated or non-oscillated
+    int sizeWidth;  // Width of the draw area
+    int sizeHeight; // Height of the draw area
 
     QColor rastrColor; // Value for color, to distinguish between stationary and moving rastrs
     QColor bgColor;    // Value for color of the background for stationary rastr
