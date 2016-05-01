@@ -120,14 +120,12 @@ void MainWindow::resizeEvent(QResizeEvent * event)
     ui->verticalLayoutWidget_2->resize(this->width()-20, anchor1);
 
     // Update of the size of the window
-    paintRastr1->setSize(this->height(), this->width());
-    paintRastr2->setSize(this->height(), this->width());
+    paintRastr1->setSize(ui->graphicsView_1->height(), ui->graphicsView_1->width());
+    paintRastr2->setSize(ui->graphicsView_1->height(), ui->graphicsView_1->width());
 
     // Refresh the rastr drawings
     paintRastr1->update();
     paintRastr2->update();
-    ui->verticalLayoutWidget->update();
-    ui->verticalLayoutWidget_2->update();
 
     // Resize the leftmost graph draw area
     ui->graphicsView_2->move(margin, margin + anchor1 + margin + ui->pushButtonStart->height() + margin);
