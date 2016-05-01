@@ -441,6 +441,7 @@ void MainWindow::on_actionImport_clicked()
     ui->customPlot3->xAxis->setRange(0, rastrManipulation.jRastr*2);
 
     ui->actionExport->setEnabled(1);
+    ui->actionSave->setEnabled(1);
 }
 
 // Triggers export from a rastr into a text file
@@ -645,4 +646,5 @@ void MainWindow::on_actionLoad_triggered()
      ui->customPlot3->xAxis->setRange(0, rastrManipulation.jRastr*2);
 
      ui->actionExport->setEnabled(1);
+     ui->actionSave->setEnabled(1);
 }

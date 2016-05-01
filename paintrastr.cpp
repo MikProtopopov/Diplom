@@ -101,6 +101,13 @@ void PaintRastr::paintEvent(QPaintEvent *)
     cellWidth = (sizeWidth / 3 - 2*10) / staticY; // Width of one cell of rastr
     cellHeight = (sizeHeight - 2*10) / staticX;   // Height of one cell of rastr
 
+    if ((sizeWidth / 3 - 2*10) / staticY < (sizeHeight - 2*10) / staticX)
+        cellHeight = (sizeWidth / 3 - 2*10) / staticY;
+    else
+        cellWidth = (sizeHeight - 2*10) / staticX;
+
+
+
     QPainter main(this);
     main.setPen(QPen(rastrColor,1,Qt::SolidLine));
 
