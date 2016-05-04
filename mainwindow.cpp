@@ -20,6 +20,7 @@
 #include "rastrmanipulation.h"
 #include "paintrastr.h"
 #include "qcustomplot.h"
+#include "helpwindow.h"
 
 #include <malloc.h>
 #include <fstream>
@@ -50,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),ui(new Ui::MainWin
     {
         dialog = new Dialog(this);
         sWindow = new StartWindow(this);
+        helpWindow = new HelpWindow(this);
         paintRastr1 = new PaintRastr(this);
         paintRastr2 = new PaintRastr(this);
     } catch (...){
@@ -567,11 +569,7 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_actionManual_triggered()
 {
-    QMessageBox::about(this, "Руководство",
-                       "Перед началом работы необходимо выбрать пункт меню Файл->Импортировать."
-                       "\nДалее пользователь должен выбрать нужный ему файл с растровой матрицей."
-                       "\nДалее, после того, как на экране появится серый растр, необходимо нажать кнопку Начать, и в открывшемся окне нажать кнопку Запуск."
-                       "\nПосле этого кнопка >> станет доступной, и по нажатии на нее черный растр начнет двигаться вправо, а графики в нижней части экрана начнут заполняться данными.");
+    helpWindow->show();
 }
 
 // Triggers saving feature

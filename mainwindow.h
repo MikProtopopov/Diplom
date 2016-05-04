@@ -22,6 +22,7 @@
 #include "startwindow.h"
 #include "rastrmanipulation.h"
 #include "paintrastr.h"
+#include "helpwindow.h"
 
 #include "qcustomplot.h"
 
@@ -80,6 +81,7 @@ private:
     Ui::MainWindow *ui;
     Dialog *dialog;
     StartWindow *sWindow;
+    HelpWindow *helpWindow;
     void createAction();
     void createMenu();
     void newFile();
