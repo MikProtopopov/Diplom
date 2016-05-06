@@ -13,37 +13,32 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef STARTWINDOW_H
-#define STARTWINDOW_H
+#ifndef HELPWINDOW_H
+#define HELPWINDOW_H
 
 #include <QDialog>
+#include <QCloseEvent>
 
 namespace Ui {
-class StartWindow;
+class HelpWindow;
 }
 
-class StartWindow : public QDialog
+class HelpWindow : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit StartWindow(QWidget *parent = 0);
-    ~StartWindow();
-    int getHeight();
-    int getWidth();
+    explicit HelpWindow(QWidget *parent = 0);
+    ~HelpWindow();
 
-signals:
-    void newParametersSet(const int &xInt, const int &yInt);
+public slots:
+    void loadHelp();
 
 private slots:
     void on_pushButton_clicked();
 
-    void on_comboBox_currentIndexChanged(int index);
-
 private:
-    Ui::StartWindow *ui;
-    int height;
-    int width;
+    Ui::HelpWindow *ui;
 };
 
-#endif // STARTWINDOW_H
+#endif // HELPWINDOW_H

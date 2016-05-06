@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>278</width>
-    <height>208</height>
+    <height>233</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -22,9 +22,9 @@
   <widget class="QLineEdit" name="lineEditX">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>92</x>
      <y>70</y>
-     <width>113</width>
+     <width>141</width>
      <height>20</height>
     </rect>
    </property>
@@ -32,9 +32,9 @@
   <widget class="QLineEdit" name="lineEditY">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>92</x>
      <y>100</y>
-     <width>113</width>
+     <width>141</width>
      <height>20</height>
     </rect>
    </property>
@@ -42,27 +42,27 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>50</x>
      <y>70</y>
-     <width>71</width>
+     <width>41</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>По вертикали</string>
+    <string>Ширина</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>30</x>
+     <x>50</x>
      <y>100</y>
-     <width>81</width>
+     <width>41</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>По горизонтали</string>
+    <string>Высота</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_3">
@@ -82,14 +82,34 @@
    <property name="geometry">
     <rect>
      <x>80</x>
-     <y>140</y>
+     <y>180</y>
      <width>111</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>Сгенерировать</string>
+    <string>Создать</string>
    </property>
+  </widget>
+  <widget class="QComboBox" name="comboBox">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>130</y>
+     <width>181</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>Случайная матрица</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Матрица Адамара</string>
+    </property>
+   </item>
   </widget>
  </widget>
  <resources/>

@@ -28,6 +28,7 @@
 #include <QIODevice>
 #include <cstdlib>
 #include <stdlib.h>
+#include <iostream>
 
 RastrManipulation::RastrManipulation()
 {
@@ -64,6 +65,10 @@ void RastrManipulation::createNewRastr(const int &xInt, const int &yInt)
     rastr1 = new uint8_t*[iRastr];
     for (int i=0; i<iRastr; i++)
         rastr1[i] = new uint8_t[jRastr];
+
+    for (int i=0;i<iRastr;i++)
+        for(int j=0;j<jRastr;j++)
+            rastr1[i][j] = rand() % 2;
 }
 
 // Delete existing array

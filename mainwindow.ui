@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>621</height>
+    <width>1280</width>
+    <height>1024</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -197,7 +197,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1280</width>
      <height>21</height>
     </rect>
    </property>
@@ -296,7 +296,7 @@
   </action>
   <action name="actionNew">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>Новый</string>

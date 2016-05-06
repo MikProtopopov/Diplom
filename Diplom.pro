@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     rastrmanipulation.cpp \
     paintrastr.cpp \
     mainwindow.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    helpwindow.cpp
 
 HEADERS  += \
     dialog.h \
@@ -27,9 +28,11 @@ HEADERS  += \
     rastrmanipulation.h \
     paintrastr.h \
     mainwindow.h \
-    qcustomplot.h
+    qcustomplot.h \
+    helpwindow.h
 
 FORMS    += \
     dialog.ui \
     startwindow.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    helpwindow.ui

@@ -13,37 +13,43 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef STARTWINDOW_H
-#define STARTWINDOW_H
+#include "helpwindow.h"
+#include "ui_helpwindow.h"
 
-#include <QDialog>
+#include <QPushButton>
+#include <QTextStream>
+#include <QTextEdit>
+#include <QFileDialog>
 
-namespace Ui {
-class StartWindow;
+
+HelpWindow::HelpWindow(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::HelpWindow)
+{
+    ui->setupUi(this);
+
 }
 
-class StartWindow : public QDialog
+HelpWindow::~HelpWindow()
 {
-    Q_OBJECT
+    delete ui;
+}
 
-public:
-    explicit StartWindow(QWidget *parent = 0);
-    ~StartWindow();
-    int getHeight();
-    int getWidth();
+void HelpWindow::loadHelp()
+{
+    QFile f("docs/help.html");
+    if (!f.open(QIODevice::ReadOnly)) return;
 
-signals:
-    void newParametersSet(const int &xInt, const int &yInt);
+    QTextStream ts(&f);
+    QString s = ts.readAll();
+    f.close();
 
-private slots:
-    void on_pushButton_clicked();
+    ui->textBrowser->setHtml(s);
+    s.clear();
+}
 
-    void on_comboBox_currentIndexChanged(int index);
-
-private:
-    Ui::StartWindow *ui;
-    int height;
-    int width;
-};
-
-#endif // STARTWINDOW_H
+void HelpWindow::on_pushButton_clicked()
+{
+    ui->textBrowser->clear();
+    this->close();
+}
