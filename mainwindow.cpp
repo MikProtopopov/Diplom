@@ -20,6 +20,7 @@
 #include "rastrmanipulation.h"
 #include "paintrastr.h"
 #include "qcustomplot.h"
+#include "helpwindow.h"
 
 #include <malloc.h>
 #include <fstream>
@@ -50,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),ui(new Ui::MainWin
     {
         dialog = new Dialog(this);
         sWindow = new StartWindow(this);
+        helpWindow = new HelpWindow(this);
         paintRastr1 = new PaintRastr(this);
         paintRastr2 = new PaintRastr(this);
     } catch (...){
@@ -94,6 +96,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),ui(new Ui::MainWin
     connect(ui->actionExport, SIGNAL(triggered()), this, SLOT(on_actionExport_clicked()));
     connect(ui->actionImport, SIGNAL(triggered()), this, SLOT(on_actionImport_clicked()));
     connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(on_actionNew_clicked()));
+    connect(ui->actionManual, SIGNAL(triggered()), helpWindow, SLOT(loadHelp()));
 
 }
 
@@ -373,11 +376,70 @@ void MainWindow::on_pushButtonStart_clicked()
 
 void MainWindow::on_actionNew_clicked()
 {
+    if (rastrManipulation.rastr1 != NULL)
+        checkForSave();
+
     if ((rastrManipulation.rastr1)&&(rastrManipulation.checkForSave()))
         rastrManipulation.deleteArray(rastrManipulation.iRastr);
-    sWindow->show();
-    sWindow->activateWindow();
-    ui->pushButtonStart->setEnabled(1);
+    sWindow->exec();
+    if (QDialog::Accepted != sWindow->result())
+        return;
+
+    if (-1 == sWindow->getHeight())
+        return;
+
+    rastrManipulation.iRastr = sWindow->getWidth();
+    rastrManipulation.jRastr = sWindow->getHeight();
+
+    rastrManipulation.createNewRastr(sWindow->getWidth(),sWindow->getHeight());
+
+    paintRastr1->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
+                               rastrManipulation.iRastr, rastrManipulation.jRastr,rastrManipulation.jRastr, Qt::gray,
+                               rastrManipulation.iRastr, rastrManipulation.jRastr, 0); // Set parameters for background rastr
+    paintRastr1->setBGColor(Qt::white);
+
+    paintRastr1->setRastr(rastrManipulation.rastr1); // Sets matrix for background rastr
+    if (rastrManipulation.rastr2 != NULL)
+    {
+        paintRastr2->hide();
+    }
+
+    // Set tick length for first graph
+    ui->customPlot1->xAxis->setAutoTickStep(false);
+    ui->customPlot1->xAxis->setTickStep(rastrManipulation.jRastr*2 / 6);
+    ui->customPlot1->yAxis->setAutoTickStep(false);
+
+    // Set tick length for second graph
+    ui->customPlot2->xAxis->setAutoTickStep(false);
+    ui->customPlot2->xAxis->setTickStep(rastrManipulation.jRastr*2 / 6);
+    ui->customPlot2->yAxis->setAutoTickStep(false);
+
+    // Set tick length for third graph
+    ui->customPlot3->xAxis->setAutoTickStep(false);
+    ui->customPlot3->xAxis->setTickStep(rastrManipulation.jRastr*2 / 6);
+    ui->customPlot3->yAxis->setAutoTickStep(false);
+
+    // give the axes some labels:
+    ui->customPlot1->xAxis->setLabel("AcF");
+    ui->customPlot1->yAxis->setLabel("Количество открытых окон");
+    // set axes ranges, so we see all data:
+    ui->customPlot1->xAxis->setRange(0, rastrManipulation.jRastr*2);
+
+    ui->customPlot2->xAxis->setLabel("AcF'");
+    ui->customPlot2->yAxis->setLabel("Количество открытых окон");
+    // set axes ranges, so we see all data:
+    ui->customPlot2->xAxis->setRange(0, rastrManipulation.jRastr*2);
+
+    ui->customPlot3->xAxis->setLabel("AcF' - AcF");
+    ui->customPlot3->yAxis->setLabel("Количество открытых окон");
+    // set axes ranges, so we see all data:
+    ui->customPlot3->xAxis->setRange(0, rastrManipulation.jRastr*2);
+
+    ui->actionExport->setEnabled(1);
+    ui->actionSave->setEnabled(1);
+
+    ui->pushButtonStep->setEnabled(0); // Disables "Step" button
+    ui->pushButtonStart->setEnabled(1); // Enables "Start" button
 }
 
 // Triggers import of a rastr from a text file
@@ -567,11 +629,7 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_actionManual_triggered()
 {
-    QMessageBox::about(this, "Руководство",
-                       "Перед началом работы необходимо выбрать пункт меню Файл->Импортировать."
-                       "\nДалее пользователь должен выбрать нужный ему файл с растровой матрицей."
-                       "\nДалее, после того, как на экране появится серый растр, необходимо нажать кнопку Начать, и в открывшемся окне нажать кнопку Запуск."
-                       "\nПосле этого кнопка >> станет доступной, и по нажатии на нее черный растр начнет двигаться вправо, а графики в нижней части экрана начнут заполняться данными.");
+    helpWindow->show();
 }
 
 // Triggers saving feature
