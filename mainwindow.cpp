@@ -112,7 +112,7 @@ void MainWindow::resizeEvent(QResizeEvent * event)
 {
     QMainWindow::resizeEvent(event);
     int margin = 10;
-    int anchor1 = (this->height()-20) / 2.2;     // Height of the draw area for rastr
+    int anchor1 = (this->height()-20) / 2;     // Height of the draw area for rastr
     int anchor2 = this->height() - anchor1 - margin*3 - ui->pushButtonStart->height() - margin*5; // Height of the draw area for graphs
     int anchor3 = (this->width()- margin*4) / 3; // Width of the draw areas for graphs
 
@@ -311,8 +311,6 @@ void MainWindow::on_pushButtonStart_clicked()
     if (QDialog::Accepted != dialog->result())
         return;
 
-    // TODOCheck HOW USER CLOSED THE WINDOW
-
     rastrManipulation.setOscillation(dialog->oscillation);
 
     errorHandling(rastrManipulation.fillRastr2()); // Fills second, moving rastr
@@ -392,6 +390,12 @@ void MainWindow::on_actionNew_clicked()
     rastrManipulation.jRastr = sWindow->getHeight();
 
     rastrManipulation.createNewRastr(sWindow->getWidth(),sWindow->getHeight());
+    if (( (this->minimumHeight() - 20) / 2.1) / rastrManipulation.iRastr < 4)
+    {
+        QMessageBox::information(this, tr("Ошибка"), tr("Слишком большая размерность матрицы."));
+        rastrManipulation.deleteArray(rastrManipulation.iRastr);
+        return;
+    }
 
     paintRastr1->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
                                rastrManipulation.iRastr, rastrManipulation.jRastr,rastrManipulation.jRastr, Qt::gray,
@@ -454,6 +458,12 @@ void MainWindow::on_actionImport_clicked()
         return;
 
     errorHandling(rastrManipulation.importRastr(fileName));
+    if (( (this->minimumHeight() - 20) / 2.1) / rastrManipulation.iRastr < 4)
+    {
+        QMessageBox::information(this, tr("Ошибка"), tr("Слишком большая размерность матрицы."));
+        rastrManipulation.deleteArray(rastrManipulation.iRastr);
+        return;
+    }
 
     paintRastr1->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
                                rastrManipulation.iRastr, rastrManipulation.jRastr,rastrManipulation.jRastr, Qt::gray,
@@ -655,6 +665,12 @@ void MainWindow::on_actionLoad_triggered()
         return;
 
      errorHandling(rastrManipulation.loadRastr(fileName));
+     if (( (this->minimumHeight() - 20) / 2.1) / rastrManipulation.iRastr < 4)
+     {
+         QMessageBox::information(this, tr("Ошибка"), tr("Слишком большая размерность матрицы."));
+         rastrManipulation.deleteArray(rastrManipulation.iRastr);
+         return;
+     }
 
      paintRastr1->setParameters(ui->graphicsView_1->height(), ui->graphicsView_1->width(),
                                 rastrManipulation.iRastr, rastrManipulation.jRastr,rastrManipulation.jRastr, Qt::gray,
