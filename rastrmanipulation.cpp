@@ -71,6 +71,48 @@ void RastrManipulation::createNewRastr(const int &xInt, const int &yInt)
             rastr1[i][j] = rand() % 2;
 }
 
+void RastrManipulation::createNewRastrAdamar(const int &xInt)
+{
+    iRastr = xInt;
+    jRastr = xInt;
+
+    if ((rastr1)&&(checkForSave()))
+        deleteArray(iRastr);
+
+    rastr1 = new uint8_t*[iRastr];
+    for (int i=0; i<iRastr; i++)
+        rastr1[i] = new uint8_t[jRastr];
+
+    for (int i=0;i<iRastr;i++)
+        for(int j=0;j<jRastr;j++)
+            rastr1[i][j] = 1;
+
+    for (int i=2;i<iRastr;i++)
+    {
+        rastr1[i][i] = 0;
+        int a = legendre(i-1,iRastr-1);
+        for(int j=0;j<jRastr - i;j++)
+        {
+            if (1 == a)
+                rastr1[j+1][j+i] = a;
+                rastr1[j+i][j+1] = -a;
+            if (-1 == a)
+                rastr1[j+1][j+i] = 0;
+                rastr1[j+i][j+1] = 0;
+        }
+    }
+}
+
+int RastrManipulation::legendre(int a, int p)
+{
+    if (1 == a)
+        return 1;
+    if (0 == a % 2)
+        return (legendre(a/2,p) * ((-1)^((p^2 - 1) / 8)));
+    if (1 == a % 2)
+        return (legendre(p%a,p) * ((-1)^((a-1)*(p-1) / 4)));
+}
+
 // Delete existing array
 void RastrManipulation::deleteArray(int DeleteLines) // DeleteLines - number of lines in array we are deleting
 {

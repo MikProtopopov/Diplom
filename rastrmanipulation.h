@@ -28,6 +28,7 @@ public:
     int saveRastr(QString fileName);   // Function of saving rastrs
     char loadRastr(QString fileName);   // Function of loading rastrs
     void deleteArray(int DeleteLines); // Delete craeted rastrs
+    int legendre(int a, int p);
 
     int compareRastr(int stepHorisontal, int stepVertical); // Function for counting the amount of open windows in rastr overlap
 
@@ -44,6 +45,8 @@ public:
     uint8_t *rastrBuffer;     // Secondaty, moving rastr
 
     void createNewRastr(const int &xInt, const int &yInt);
+    void createNewRastrAdamar(const int &xInt);
+
 };
 
 #endif // RASTRMANIPULATION_H

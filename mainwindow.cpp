@@ -383,13 +383,16 @@ void MainWindow::on_actionNew_clicked()
     if (QDialog::Accepted != sWindow->result())
         return;
 
-    if (-1 == sWindow->getHeight())
-        return;
+//    if (-1 == sWindow->getHeight())
+//        return;
 
     rastrManipulation.iRastr = sWindow->getWidth();
-    rastrManipulation.jRastr = sWindow->getHeight();
+//    rastrManipulation.jRastr = sWindow->getHeight();
+    rastrManipulation.jRastr = sWindow->getWidth();
 
-    rastrManipulation.createNewRastr(sWindow->getWidth(),sWindow->getHeight());
+//    rastrManipulation.createNewRastr(sWindow->getWidth(),sWindow->getHeight());
+    rastrManipulation.createNewRastrAdamar(sWindow->getWidth());
+
     if (( (this->minimumHeight() - 20) / 2.1) / rastrManipulation.iRastr < 4)
     {
         QMessageBox::information(this, tr("Ошибка"), tr("Слишком большая размерность матрицы."));
