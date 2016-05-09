@@ -49,7 +49,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Ширина</string>
+    <string>Высота</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
@@ -62,7 +62,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Высота</string>
+    <string>Ширина</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_3">
